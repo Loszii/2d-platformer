@@ -3,8 +3,6 @@ import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
 import main.GamePanel;
 
-//to do, make square move two dir at same time using keyReleased
-
 public class KeyboardInputs implements KeyListener {
     private GamePanel gamePanel;
 
@@ -20,24 +18,38 @@ public class KeyboardInputs implements KeyListener {
     public void keyPressed(KeyEvent e) {
         switch (e.getKeyCode()) {
             case KeyEvent.VK_W: //code for virtual key w
-                gamePanel.mainPlayer.changeY(-50);
+                gamePanel.wPressed = true;
                 break;
             case KeyEvent.VK_A:
-                gamePanel.mainPlayer.changeX(-50);
+                gamePanel.aPressed = true;
                 break;
             case KeyEvent.VK_S:
-                gamePanel.mainPlayer.changeY(50);
+                gamePanel.sPressed = true;
                 break;
             case KeyEvent.VK_D:
-                gamePanel.mainPlayer.changeX(50);
+                gamePanel.dPressed = true;
                 break;
             case KeyEvent.VK_ESCAPE:
                 System.exit(0);
+                break;
         }
 
     }
     @Override
     public void keyReleased(KeyEvent e) {
-
+        switch (e.getKeyCode()) {
+            case KeyEvent.VK_W: //code for virtual key w
+                gamePanel.wPressed = false;
+                break;
+            case KeyEvent.VK_A:
+                gamePanel.aPressed = false;
+                break;
+            case KeyEvent.VK_S:
+                gamePanel.sPressed = false;
+                break;
+            case KeyEvent.VK_D:
+                gamePanel.dPressed = false;
+                break;
+        }
     }
 }

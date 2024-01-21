@@ -7,10 +7,10 @@ public class GameWindow {
 
     public GameWindow(GamePanel gamePanel) {
         jframe = new JFrame();
-        jframe.setUndecorated(true);
+        jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jframe.setResizable(false);
-        jframe.setSize(Game.width, Game.height);
         jframe.add(gamePanel);
+        jframe.pack(); //pack jpanel in frame
         jframe.setLocationRelativeTo(null); //starts in center of monitor
         jframe.setVisible(true);
     }
