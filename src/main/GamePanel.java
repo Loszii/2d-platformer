@@ -4,12 +4,15 @@ import java.awt.Graphics;
 import java.awt.Dimension;
 import javax.swing.JPanel;
 import inputs.KeyboardInputs;
+import entity.Player;
+import entity.Platform;
 
 //add collisions and gravity
 
 public class GamePanel extends JPanel { //inherits from JPanel
 
     public Player mainPlayer;
+    public Platform testPlat;
     public boolean wPressed = false;
     public boolean aPressed = false;
     public boolean sPressed = false;
@@ -19,7 +22,8 @@ public class GamePanel extends JPanel { //inherits from JPanel
     public GamePanel(){
         setPanelSize();
         addKeyListener(new KeyboardInputs(this)); //JPanel function
-        mainPlayer = new Player(50, 50);
+        mainPlayer = new Player(50, 50, (Game.width - 50) / 2, Game.height - 50, this);
+        testPlat = new Platform(50, 50, 500, 550, this);
 
     }
 
@@ -31,83 +35,21 @@ public class GamePanel extends JPanel { //inherits from JPanel
     public void paintComponent(Graphics g) { //needs graphics object, auto runs from JPanel
         //g is attribute of jPanel that was inherited
         super.paintComponent(g); //super is JPanel, calling JPanels own paint method with its pre defined graphics variable
-        //g.setColor(new Color(255, 0, 0));
-        mainPlayer.yAcceleration();
+        g.setColor(new Color(0, 0, 0));
         mainPlayer.movePlayer();
         mainPlayer.checkBounds();
-        mainPlayer.drawPlayer(g);
-
+        checkCollisions();
+        mainPlayer.draw(g);
+        testPlat.draw(g);
     }
-
-    public class Player {
-        public int width;
-        public int height;
-        public int xPos = 0;
-        public int yPos = 0;
-        public int xAcc = 0;
-        public int yAcc = 5;
-        public boolean isGrounded = true;
-
-        public Player(int width, int height) {
-            this.width = width;
-            this.height = height;
-            yPos = Game.height - height;
+    //collisions with other entities
+    private void checkCollisions() { //fix side collisions
+        if (!mainPlayer.isGrounded && mainPlayer.xPos + mainPlayer.width > testPlat.xPos && mainPlayer.xPos < testPlat.xPos + testPlat.width && mainPlayer.yPos + mainPlayer.height > testPlat.yPos && mainPlayer.yPos < testPlat.yPos) {
+            mainPlayer.yPos = testPlat.yPos - mainPlayer.height; // top col
+            mainPlayer.isGrounded = true;
+        } else if (mainPlayer.xPos + mainPlayer.width > testPlat.xPos && mainPlayer.xPos < testPlat.xPos + testPlat.width && mainPlayer.yPos < testPlat.yPos + testPlat.height && mainPlayer.yPos + mainPlayer.height > testPlat.yPos) {
+            mainPlayer.yPos = testPlat.yPos + testPlat.height; //bottom col
         }
-
-        public void changeX(int value) {
-            xPos += value;
-            System.out.println("X: " + xPos);
-        }
-    
-        public void changeY(int value) {
-            yPos += value;
-            System.out.println("Y: " + yPos);
-        }
-
-        public void drawPlayer(Graphics g) {
-            g.fillRect(xPos, yPos, width, height);
-        }
-
-        public void movePlayer() {
-            if (wPressed && isGrounded) {
-                yAcc = -20;
-            }
-            if (aPressed) {
-                changeX(-10);
-            }
-            if (sPressed) {
-                changeY(10);
-            }
-            if (dPressed) {
-                changeX(10);
-            }
-        }
-
-        private void yAcceleration() {
-            yPos += yAcc;
-            if (yAcc != defaultGrav) {
-                yAcc += 1;
-            }
-        }
-
-        private void checkBounds() {
-            if (yPos < 0) {
-                yPos = 0;
-            }
-            if (xPos < 0) {
-                xPos = 0;
-            }
-            if (yPos > Game.height - height) {
-                yPos = Game.height - height;
-                isGrounded = true;
-            } else {
-                isGrounded = false;
-            }
-            if (xPos > Game.width - width) {
-                xPos = Game.width - width;
-            }
-        }
-
     }
 
 }

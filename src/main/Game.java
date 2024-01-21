@@ -4,14 +4,13 @@ public class Game implements Runnable {
     
     static final public int width = 1280;
     static final public int height = 720;
-    private GameWindow gameWindow;
     private GamePanel gamePanel;
     private Thread gameThread;
     private final int FPS_SET = 120;
 
     public Game() {
         gamePanel = new GamePanel();
-        gameWindow = new GameWindow(gamePanel);
+        new GameWindow(gamePanel);
         gamePanel.setFocusable(true);
         gamePanel.requestFocus(); //sets inputs to focus on window
         startGameLoop();
