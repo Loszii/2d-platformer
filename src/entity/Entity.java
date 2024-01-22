@@ -35,14 +35,12 @@ public class Entity {
     public void checkBounds() {
         if (yPos < 0) {
             yPos = 0;
+        } else if (yPos > Game.height - height) {
+            yPos = Game.height - height;
         }
         if (xPos < 0) {
             xPos = 0;
-        }
-        if (yPos > Game.height - height) {
-            yPos = Game.height - height;
-        }
-        if (xPos > Game.width - width) {
+        } else if (xPos > Game.width - width) {
             xPos = Game.width - width;
         }
     }

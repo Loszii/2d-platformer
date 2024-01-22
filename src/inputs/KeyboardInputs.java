@@ -23,9 +23,6 @@ public class KeyboardInputs implements KeyListener {
             case KeyEvent.VK_A:
                 gamePanel.aPressed = true;
                 break;
-            case KeyEvent.VK_S:
-                gamePanel.sPressed = true;
-                break;
             case KeyEvent.VK_D:
                 gamePanel.dPressed = true;
                 break;
@@ -43,9 +40,6 @@ public class KeyboardInputs implements KeyListener {
                 break;
             case KeyEvent.VK_A:
                 gamePanel.aPressed = false;
-                break;
-            case KeyEvent.VK_S:
-                gamePanel.sPressed = false;
                 break;
             case KeyEvent.VK_D:
                 gamePanel.dPressed = false;

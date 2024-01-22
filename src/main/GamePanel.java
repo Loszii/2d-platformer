@@ -7,15 +7,14 @@ import inputs.KeyboardInputs;
 import entity.Player;
 import entity.Platform;
 
-//add collisions and gravity
+//make platforms teleport from one side to the other and move, as well as game scroll upwards
 
 public class GamePanel extends JPanel { //inherits from JPanel
 
     public Player mainPlayer;
-    public Platform testPlat;
+    public Platform[] platforms;
     public boolean wPressed = false;
     public boolean aPressed = false;
-    public boolean sPressed = false;
     public boolean dPressed = false;
     public int defaultGrav = 5;
 
@@ -23,7 +22,9 @@ public class GamePanel extends JPanel { //inherits from JPanel
         setPanelSize();
         addKeyListener(new KeyboardInputs(this)); //JPanel function
         mainPlayer = new Player(50, 50, (Game.width - 50) / 2, Game.height - 50, this);
-        testPlat = new Platform(50, 50, 500, 550, this);
+        platforms = new Platform[2];
+        platforms[0] = new Platform(100, 25, 500, 500, this);
+        platforms[1] = new Platform(100, 25, 200, 400, this);
 
     }
 
@@ -35,20 +36,13 @@ public class GamePanel extends JPanel { //inherits from JPanel
     public void paintComponent(Graphics g) { //needs graphics object, auto runs from JPanel
         //g is attribute of jPanel that was inherited
         super.paintComponent(g); //super is JPanel, calling JPanels own paint method with its pre defined graphics variable
-        g.setColor(new Color(0, 0, 0));
-        mainPlayer.movePlayer();
+        mainPlayer.movePlayer(platforms);
         mainPlayer.checkBounds();
-        checkCollisions();
+        g.setColor(new Color(255, 0, 0));
         mainPlayer.draw(g);
-        testPlat.draw(g);
-    }
-    //collisions with other entities
-    private void checkCollisions() { //fix side collisions
-        if (!mainPlayer.isGrounded && mainPlayer.xPos + mainPlayer.width > testPlat.xPos && mainPlayer.xPos < testPlat.xPos + testPlat.width && mainPlayer.yPos + mainPlayer.height > testPlat.yPos && mainPlayer.yPos < testPlat.yPos) {
-            mainPlayer.yPos = testPlat.yPos - mainPlayer.height; // top col
-            mainPlayer.isGrounded = true;
-        } else if (mainPlayer.xPos + mainPlayer.width > testPlat.xPos && mainPlayer.xPos < testPlat.xPos + testPlat.width && mainPlayer.yPos < testPlat.yPos + testPlat.height && mainPlayer.yPos + mainPlayer.height > testPlat.yPos) {
-            mainPlayer.yPos = testPlat.yPos + testPlat.height; //bottom col
+        g.setColor(new Color(0, 0, 0));
+        for (int i = 0; i < platforms.length; i++) {
+            platforms[i].draw(g);
         }
     }
 
