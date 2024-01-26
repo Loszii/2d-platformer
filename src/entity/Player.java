@@ -1,6 +1,5 @@
 package entity;
 import main.GamePanel;
-import main.Game;
 
 public class Player extends Entity{
 
@@ -40,6 +39,7 @@ public class Player extends Entity{
                 for (int i = 0; i < platforms.length; i++) {
                     if (isRightBlocked(value, platforms[i]) && (rightOpen == true)) {
                         rightOpen = false;
+                        xPos = platforms[i].getX() - width;
                     }
                 }
                 if (rightOpen) {
@@ -52,6 +52,7 @@ public class Player extends Entity{
                 for (int i = 0; i < platforms.length; i++) {
                     if (isLeftBlocked(value, platforms[i]) && (leftOpen == true)) {
                         leftOpen = false;
+                        xPos = platforms[i].getX() + platforms[i].getWidth();
                     }
                 }
                 if (leftOpen) {
@@ -69,6 +70,7 @@ public class Player extends Entity{
                     if (isBotBlocked(value, platforms[i]) && (botOpen == true)) {
                         botOpen = false;
                         isGrounded = true;
+                        yPos = platforms[i].getY() - height;
                     }
                 }
                 if (botOpen) {
@@ -79,6 +81,8 @@ public class Player extends Entity{
                 for (int i = 0; i < platforms.length; i++) {
                     if (isTopBlocked(value, platforms[i]) && (topOpen == true)) {
                         topOpen = false;
+                        yPos = platforms[i].getY() + platforms[i].getHeight();
+                        yAcc = 0;
                     }
                 }
                 if (topOpen) {
