@@ -4,45 +4,57 @@ import main.Game;
 import java.awt.Graphics;
 
 public class Entity {
-    public int width;
-    public int height;
-    public int xPos;
-    public int yPos;
-    public int xAcc = 0;
-    public int yAcc = 5;
-    public GamePanel gamePanel;
+    protected int width;
+    protected int height;
+    protected int xPos;
+    protected int yPos;
+    protected GamePanel gamePanel;
 
     public Entity(int width, int height, int xPos, int yPos, GamePanel gamePanel) {
         this.width = width;
         this.height = height;
-        this.gamePanel = gamePanel;
         this.xPos = xPos;
         this.yPos = yPos;
+        this.gamePanel = gamePanel;
     }
 
-    public void changeX(int value) {
-        xPos += value;
+    public void setX(int value) {
+        xPos = value;
+    }
+    public void setY(int value) {
+        yPos = value;
     }
 
-    public void changeY(int value) {
-        yPos += value;
+    public int getX() {
+        return xPos;
+    }
+    public int getY() {
+        return yPos;
+    }
+    public int getWidth() {
+        return width;
+    }
+    public int getHeight() {
+        return height;
     }
 
     public void draw(Graphics g) {
         g.fillRect(xPos, yPos, width, height);
     }
 
-    public void checkBounds() {
-        if (yPos < 0) {
-            yPos = 0;
-        } else if (yPos > Game.height - height) {
-            yPos = Game.height - height;
+    //takes in position values and checks if they are in bounds
+    public boolean inBounds(int xVal, int yVal) {
+        if (yVal < 0) {
+            return false;
+        } else if (yVal > Game.height - height) {
+            return false;
         }
-        if (xPos < 0) {
-            xPos = 0;
-        } else if (xPos > Game.width - width) {
-            xPos = Game.width - width;
+        if (xVal < 0) {
+            return false;
+        } else if (xVal > Game.width - width) {
+            return false;
         }
+        return true;
     }
 
 }

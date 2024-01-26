@@ -2,8 +2,8 @@ package main;
 
 public class Game implements Runnable {
     
-    static final public int width = 1280;
-    static final public int height = 720;
+    public static final int width = 1280;
+    public static final int height = 720;
     private GamePanel gamePanel;
     private Thread gameThread;
     private final int FPS_SET = 120;

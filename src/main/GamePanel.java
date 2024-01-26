@@ -11,12 +11,12 @@ import entity.Platform;
 
 public class GamePanel extends JPanel { //inherits from JPanel
 
-    public Player mainPlayer;
-    public Platform[] platforms;
-    public boolean wPressed = false;
-    public boolean aPressed = false;
-    public boolean dPressed = false;
-    public int defaultGrav = 5;
+    public static final int gravity = 5;
+    private Player mainPlayer;
+    private Platform[] platforms;
+    private boolean wPressed = false;
+    private boolean aPressed = false;
+    private boolean dPressed = false;
 
     public GamePanel(){
         setPanelSize();
@@ -36,14 +36,35 @@ public class GamePanel extends JPanel { //inherits from JPanel
     public void paintComponent(Graphics g) { //needs graphics object, auto runs from JPanel
         //g is attribute of jPanel that was inherited
         super.paintComponent(g); //super is JPanel, calling JPanels own paint method with its pre defined graphics variable
-        mainPlayer.movePlayer(platforms);
-        mainPlayer.checkBounds();
-        g.setColor(new Color(255, 0, 0));
-        mainPlayer.draw(g);
+
+        mainPlayer.applyYAcc(platforms);
+        if (wPressed) {
+            if (mainPlayer.getGrounded()) {
+                mainPlayer.setYAcc(-25);
+            }
+        }
+        if (aPressed) {
+            mainPlayer.setX(mainPlayer.getX() - 5, platforms);
+        }
+        if (dPressed) {
+            mainPlayer.setX(mainPlayer.getX() + 5, platforms);
+        }
+
         g.setColor(new Color(0, 0, 0));
+        mainPlayer.draw(g);
         for (int i = 0; i < platforms.length; i++) {
             platforms[i].draw(g);
         }
+    }
+
+    public void setWPressed(boolean bool) {
+        wPressed = bool;
+    }
+    public void setAPressed(boolean bool) {
+        aPressed = bool;
+    }
+    public void setDPressed(boolean bool) {
+        dPressed = bool;
     }
 
 }

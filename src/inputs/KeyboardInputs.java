@@ -18,13 +18,13 @@ public class KeyboardInputs implements KeyListener {
     public void keyPressed(KeyEvent e) {
         switch (e.getKeyCode()) {
             case KeyEvent.VK_W: //code for virtual key w
-                gamePanel.wPressed = true;
+                gamePanel.setWPressed(true);
                 break;
             case KeyEvent.VK_A:
-                gamePanel.aPressed = true;
+                gamePanel.setAPressed(true);
                 break;
             case KeyEvent.VK_D:
-                gamePanel.dPressed = true;
+                gamePanel.setDPressed(true);
                 break;
             case KeyEvent.VK_ESCAPE:
                 System.exit(0);
@@ -36,13 +36,13 @@ public class KeyboardInputs implements KeyListener {
     public void keyReleased(KeyEvent e) {
         switch (e.getKeyCode()) {
             case KeyEvent.VK_W: //code for virtual key w
-                gamePanel.wPressed = false;
+                gamePanel.setWPressed(false);
                 break;
             case KeyEvent.VK_A:
-                gamePanel.aPressed = false;
+                gamePanel.setAPressed(false);
                 break;
             case KeyEvent.VK_D:
-                gamePanel.dPressed = false;
+                gamePanel.setDPressed(false);
                 break;
         }
     }

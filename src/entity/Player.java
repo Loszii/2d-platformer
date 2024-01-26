@@ -3,74 +3,129 @@ import main.GamePanel;
 import main.Game;
 
 public class Player extends Entity{
-    public boolean isGrounded = true;
-    private boolean rightBlocked = false;
-    private boolean leftBlocked = false;
-    private boolean topBlocked = false;
+
+    private boolean topOpen = true;
+    private boolean rightOpen = true;
+    private boolean leftOpen = true;
+    private boolean botOpen = false;
+    private boolean isGrounded = true;
+    private int yAcc = 0;
 
     public Player(int width, int height, int xPos, int yPos, GamePanel gamePanel) {
         super(width, height, xPos, yPos, gamePanel);
     }
 
-    public void movePlayer(Platform[] platforms) {
-        leftBlocked = false;
-        rightBlocked = false;
-        topBlocked = false;
-        checkGrounded();
+    public int getYAcc() {
+        return yAcc;
+    }
+    public void setYAcc(int value) {
+        yAcc = value;
+    }
 
-        for (int i = 0; i < platforms.length; i++) {
-            if (!leftBlocked) {
-                if (xPos != platforms[i].xPos + platforms[i].width || yPos > platforms[i].yPos + platforms[i].height || yPos + height < platforms[i].yPos) {
-                    leftBlocked = false; //if sides arent touching or the player is over/under platform then move
-                } else {
-                    leftBlocked = true;
-                }
-            }
-            if (!rightBlocked) {
-                if (xPos + width != platforms[i].xPos || yPos > platforms[i].yPos + platforms[i].height || yPos + height < platforms[i].yPos) {
-                    rightBlocked = false;
-                } else {
-                    rightBlocked = true;
-                }
-            }
-        }
-        yAcceleration(platforms);
+    public boolean getGrounded() {
+        return isGrounded;
+    }
 
-        if (!rightBlocked && gamePanel.dPressed) {
-            changeX(5);
-        } else if (!leftBlocked && gamePanel.aPressed) {
-            changeX(-5);
-        }
-
-        if (gamePanel.wPressed && isGrounded) {
-            yAcc = -20; //jump
+    public void applyYAcc(Platform[] platforms) {
+        setY(yPos + yAcc, platforms);
+        if (yAcc != GamePanel.gravity) {
+            yAcc += 1;
         }
     }
 
-    private void yAcceleration(Platform[] platforms) {
-        for (int i = 0; i < platforms.length; i++) {
-            if (yPos + height == platforms[i].yPos && xPos + width > platforms[i].xPos && xPos < platforms[i].xPos + platforms[i].width) {
-                isGrounded = true;
+    public void setX(int value, Platform[] platforms) {
+        if (inBounds(value, yPos)) {
+            if (value > xPos) {
+                rightOpen = true;
+                for (int i = 0; i < platforms.length; i++) {
+                    if (isRightBlocked(value, platforms[i]) && (rightOpen == true)) {
+                        rightOpen = false;
+                    }
+                }
+                if (rightOpen) {
+                    setX(value);
+                }
+
+
+            } else {
+                leftOpen = true;
+                for (int i = 0; i < platforms.length; i++) {
+                    if (isLeftBlocked(value, platforms[i]) && (leftOpen == true)) {
+                        leftOpen = false;
+                    }
+                }
+                if (leftOpen) {
+                    setX(value);
+                }
             }
-            if (yPos <= platforms[i].yPos + platforms[i].height && xPos + width > platforms[i].xPos && xPos < platforms[i].xPos + platforms[i].width && yPos > platforms[i].yPos) {
-                topBlocked = true; //dont move up if platform
-            }
-        }
-        if (yAcc < 0 && topBlocked) { //if moving up and top is blocked
-            yAcc = 0;
-        } else if (!isGrounded || yAcc != gamePanel.defaultGrav) {
-            yPos += yAcc;
-        }
-        if (yAcc != gamePanel.defaultGrav) {
-            yAcc += 1; //slowly lose upwards momentum
         }
     }
-
-    private void checkGrounded() {
-        if (yPos + height == Game.height) {
+    public void setY(int value, Platform[] platforms) {
+        isGrounded = false;
+        if (inBounds(xPos, value)) {
+            if (value > yPos) {
+                botOpen = true;
+                for (int i = 0; i < platforms.length; i++) {
+                    if (isBotBlocked(value, platforms[i]) && (botOpen == true)) {
+                        botOpen = false;
+                        isGrounded = true;
+                    }
+                }
+                if (botOpen) {
+                    setY(value);
+                }
+            } else {
+                topOpen = true;
+                for (int i = 0; i < platforms.length; i++) {
+                    if (isTopBlocked(value, platforms[i]) && (topOpen == true)) {
+                        topOpen = false;
+                    }
+                }
+                if (topOpen) {
+                    setY(value); //original y func with one parameter
+                }
+            }
+        } else if (yPos > 500){ //if out of bounds and y value is near bottom, set grounded
             isGrounded = true;
+        }
+    }
+
+    //collision detections
+    //these functions take in a new coord position and a platform and check player can move to val despite given platform
+    private boolean isTopBlocked(int yVal, Platform platform) {
+        if (yPos < (platform.getY() + platform.height) || xPos > (platform.getX() + platform.getWidth()) || (xPos + width) < platform.getX()) {
+            return false;
+        } else if (yVal < (platform.getY() + platform.getHeight())) {
+            return true;
         } else {
-            isGrounded = false;
+            return false;
+        }
+    }
+    private boolean isRightBlocked(int xVal, Platform platform) {
+        if ((xPos + width) > platform.getX() || yPos > (platform.getY() + platform.getHeight()) || (yPos + height) < platform.getY()){
+            return false;
+        } else if ((xVal + width) > platform.getX()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    private boolean isLeftBlocked(int xVal, Platform platform) {
+        if (xPos < (platform.getX() + platform.getWidth()) || yPos > (platform.getY() + platform.getHeight()) || (yPos + height) < platform.getY()){
+            return false;
+        } else if (xVal < (platform.getX() + platform.getWidth())) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    private boolean isBotBlocked(int yVal, Platform platform) {
+        if ((yPos + height) > platform.getY() || xPos > (platform.getX() + platform.getWidth()) || (xPos + width) < platform.getX()) {
+            return false;
+        } else if ((yVal + height) > platform.getY()) {
+            return true;
+        } else {
+            return false;
         }
     }
 
