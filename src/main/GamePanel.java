@@ -52,10 +52,10 @@ public class GamePanel extends JPanel { //inherits from JPanel
                 mainPlayer.setYAcc(-17.5);
             }
         }
-        if (aPressed) {
+        if (aPressed && mainPlayer.isWithinSpeed()) {
             mainPlayer.setXAcc(mainPlayer.getXAcc() - 0.5);
         }
-        if (dPressed) {
+        if (dPressed && mainPlayer.isWithinSpeed()) {
             mainPlayer.setXAcc(mainPlayer.getXAcc() + 0.5);
         }
 

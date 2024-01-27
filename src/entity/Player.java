@@ -5,7 +5,7 @@ public class Player extends Entity{
 
     private boolean isGrounded = true;
     private double xAccOfGround = 0;
-    //private static final double maxAcc = 10;
+    private double maxXAcc = 12.5;
 
     public Player(int width, int height, int xPos, int yPos, GamePanel gamePanel, double xAcc, double yAcc) {
         super(width, height, xPos, yPos, gamePanel, xAcc, yAcc);
@@ -37,7 +37,7 @@ public class Player extends Entity{
             if (getXAcc() > xAccOfGround) {
                 setXAcc(getXAcc() - 0.25);
             } else {
-                setXAcc(getXAcc() + 0.25);
+                setXAcc(getXAcc() + 0.25); //applying friction
             }
         }
     }
@@ -49,7 +49,21 @@ public class Player extends Entity{
         }
     }
 
-    //max speed should be xAccOfGround + max 
-    //min speed should be xAccofGround - max
+    //returns if players acc is within xAccOfGround +/- maxXAcc
+    public boolean isWithinSpeed() {
+        if (getXAcc() >= 0) {
+            if (getXAcc() > getXAccOfGround() + maxXAcc) {
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            if (getXAcc() < getXAccOfGround() - maxXAcc) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
 
 }
