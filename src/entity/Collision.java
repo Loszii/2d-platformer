@@ -1,9 +1,7 @@
 package entity;
+import main.Game;
 
 public class Collision {
-
-    //possibly implement collission class to check collissions everyframe
-
 
     private Platform[] platforms;
     private Player mainPlayer;
@@ -15,11 +13,9 @@ public class Collision {
 
     //collision detections
     //these functions take in a new coord position and a platform and check player can move to val despite given platform
-
-    //to do, only use setters and getters once outside of for loops
     public boolean isTopBlocked() {
         for (int i = 0; i < platforms.length; i++) {
-            if (mainPlayer.getY() < (platforms[i].getY() + platforms[i].height) || mainPlayer.getX() > (platforms[i].getX() + platforms[i].getWidth()) || (mainPlayer.getX() + mainPlayer.getWidth()) < platforms[i].getX()) {
+            if (mainPlayer.getY() < (platforms[i].getY() + platforms[i].getHeight()) || mainPlayer.getX() > (platforms[i].getX() + platforms[i].getWidth()) || (mainPlayer.getX() + mainPlayer.getWidth()) < platforms[i].getX()) {
                 ;
             } else if (mainPlayer.getY() + mainPlayer.getYAcc() < (platforms[i].getY() + platforms[i].getHeight())) {
                 return true;
@@ -53,9 +49,43 @@ public class Collision {
             if ((mainPlayer.getY() + mainPlayer.getHeight()) > platforms[i].getY() || mainPlayer.getX() > (platforms[i].getX() + platforms[i].getWidth()) || (mainPlayer.getX() + mainPlayer.getWidth()) < platforms[i].getX()) {
                 ;
             } else if ((mainPlayer.getY() + mainPlayer.getYAcc() + mainPlayer.getHeight()) > platforms[i].getY()) {
+                mainPlayer.setXAccOfGround(platforms[i].getXAcc());
                 return true;
             }
         }
         return false;
+    }
+
+    //platform collisions
+    public boolean checkPlayerToLeft() {
+        for (int i = 0; i < platforms.length; i++) {
+            if (platforms[i].getX() < (mainPlayer.getX() + mainPlayer.getWidth()) || platforms[i].getY() > (mainPlayer.getY() + mainPlayer.getHeight()) || (platforms[i].getY() + platforms[i].getHeight()) < mainPlayer.getY()){
+                ;
+            } else if (platforms[i].getX() + platforms[i].getXAcc() < (mainPlayer.getX() + mainPlayer.getWidth() + mainPlayer.getXAcc())) {
+                mainPlayer.setXAcc(platforms[i].getXAcc());
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean checkPlayerToRight() {
+        for (int i = 0; i < platforms.length; i++) {
+            if ((platforms[i].getX() + platforms[i].getWidth()) > mainPlayer.getX() || platforms[i].getY() > (mainPlayer.getY() + mainPlayer.getHeight()) || (platforms[i].getY() + platforms[i].getHeight()) < mainPlayer.getY()){
+                ;
+            } else if ((platforms[i].getX() + platforms[i].getXAcc() + platforms[i].getWidth()) > mainPlayer.getX() + mainPlayer.getXAcc()) {
+                mainPlayer.setXAcc(platforms[i].getXAcc());
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void checkOutOfBounds() {
+        if (mainPlayer.getX() < -50) {
+            mainPlayer.setX(Game.width + 50 - mainPlayer.getWidth());
+        } else if (mainPlayer.getX() + mainPlayer.getWidth() > Game.width + 50) {
+            mainPlayer.setX(-50);
+        }
     }
 }

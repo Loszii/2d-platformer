@@ -3,11 +3,9 @@ import main.GamePanel;
 
 public class Player extends Entity{
 
-    private boolean topOpen = true;
-    private boolean rightOpen = true;
-    private boolean leftOpen = true;
-    private boolean botOpen = false;
     private boolean isGrounded = true;
+    private double xAccOfGround = 0;
+    //private static final double maxAcc = 10;
 
     public Player(int width, int height, int xPos, int yPos, GamePanel gamePanel, double xAcc, double yAcc) {
         super(width, height, xPos, yPos, gamePanel, xAcc, yAcc);
@@ -17,26 +15,41 @@ public class Player extends Entity{
         return isGrounded;
     }
 
+    public double getXAccOfGround() {
+        return xAccOfGround;
+    }
+
     public void setGrounded(boolean isGrounded) {
         this.isGrounded = isGrounded;
     }
 
+    //make this work when back
+    public void setXAccOfGround(double acc) {
+        xAccOfGround = acc;
+    }
+
     public void applyXAcc() {
-        setX(xPos + (int) xAcc);
-        if (xAcc != 0) {
-            if (xAcc > 0) {
-                xAcc -= 0.1;
+        if (!isGrounded) {
+            setXAccOfGround(0);
+        }
+        setX(getX() + (int) getXAcc()); //apply acceleration
+        if (getXAcc() != xAccOfGround) {
+            if (getXAcc() > xAccOfGround) {
+                setXAcc(getXAcc() - 0.25);
             } else {
-                xAcc += 0.1;
+                setXAcc(getXAcc() + 0.25);
             }
         }
     }
 
     public void applyYAcc() {
-        setY(yPos + (int) yAcc);
-        if (yAcc != GamePanel.gravity) {
-            yAcc += 0.5;
+        setY(getY() + (int) getYAcc());
+        if (getYAcc() != GamePanel.gravity) {
+            setYAcc(getYAcc() + 0.5);
         }
     }
+
+    //max speed should be xAccOfGround + max 
+    //min speed should be xAccofGround - max
 
 }

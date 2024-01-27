@@ -7,7 +7,6 @@ import javax.swing.JPanel;
 import inputs.KeyboardInputs;
 import entity.Player;
 import entity.Platform;
-import entity.Entity;
 import entity.Collision;
 
 //make platforms teleport from one side to the other and move, as well as game scroll upwards
@@ -22,17 +21,14 @@ public class GamePanel extends JPanel { //inherits from JPanel
     private boolean wPressed = false;
     private boolean aPressed = false;
     private boolean dPressed = false;
+    private int screenSpeed = 1;
 
 
     public GamePanel(){
         setPanelSize();
         addKeyListener(new KeyboardInputs(this)); //JPanel function
         mainPlayer = new Player(50, 50, (Game.width - 50) / 2, Game.height / 2 + 100, this, 0, gravity);
-        platforms = new Platform[2];
-        platforms[0] = new Platform(Game.width, 25, 0, (Game.height / 2 + mainPlayer.getHeight()) + 100, this, 0, 0); //platform under player
-
-        
-        platforms[1] = new Platform(100, 25, 200, (Game.height / 2 + mainPlayer.getHeight()) - 100, this, 5, 0);
+        platforms = generatePlats();
 
         collision = new Collision(mainPlayer, platforms);
 
@@ -49,14 +45,14 @@ public class GamePanel extends JPanel { //inherits from JPanel
 
         if (wPressed) {
             if (mainPlayer.getGrounded()) {
-                mainPlayer.setYAcc(-15);
+                mainPlayer.setYAcc(-17.5);
             }
         }
         if (aPressed) {
-            mainPlayer.setXAcc(-5);
+            mainPlayer.setXAcc(mainPlayer.getXAcc() - 0.5);
         }
         if (dPressed) {
-            mainPlayer.setXAcc(5);
+            mainPlayer.setXAcc(mainPlayer.getXAcc() + 0.5);
         }
 
         //collision
@@ -72,20 +68,28 @@ public class GamePanel extends JPanel { //inherits from JPanel
         if (collision.isRightBlocked() || collision.isLeftBlocked()) {
             mainPlayer.setXAcc(0);
         }
-
+        collision.checkPlayerToLeft();
+        collision.checkPlayerToRight();
+        collision.checkOutOfBounds();
 
         //movement
         mainPlayer.applyXAcc();
         mainPlayer.applyYAcc();
-        
-        //make collisions work with moving plat
-        platforms[1].applyXAcc();
+        for (int i = 0; i < platforms.length; i++) {
+            platforms[i].applyXAcc();
+        }
 
         //drawing
         g.setColor(new Color(0, 0, 0));
+        scrollScreen();
         mainPlayer.draw(g);
+        g.setColor(new Color(255, 0, 0));
         for (int i = 0; i < platforms.length; i++) {
             platforms[i].draw(g);
+        }
+
+        if (mainPlayer.getY() > Game.height + 150) {
+            scrollToStart();
         }
     }
 
@@ -97,6 +101,37 @@ public class GamePanel extends JPanel { //inherits from JPanel
     }
     public void setDPressed(boolean bool) {
         dPressed = bool;
+    }
+
+    public Platform[] generatePlats() {
+        Platform[] plats = new Platform[1000];
+        Random rand = new Random();
+        int yCounter = (Game.height / 2 + mainPlayer.getHeight());
+        int maxPlatWidth = 400;
+        int minPlatWidth = 200;
+        int curWidth;
+        plats[0] = new Platform(Game.width + 2000, 25, -1000, (Game.height / 2 + mainPlayer.getHeight()) + 100, this, 0, 0); //platform under player
+        for (int i = 1; i < plats.length; i++) {
+            curWidth = rand.nextInt(maxPlatWidth - minPlatWidth) + minPlatWidth;
+            plats[i] = new Platform(curWidth, 25, rand.nextInt(Game.width - curWidth), yCounter, this, rand.nextInt(6), 0);
+            yCounter -= 200;
+        }
+        return plats;
+    }
+
+    public void scrollScreen() {
+        mainPlayer.setY(mainPlayer.getY() + screenSpeed);
+        for (int i = 0; i < platforms.length; i++) {
+            platforms[i].setY(platforms[i].getY() + screenSpeed);
+        }
+    }
+
+    public void scrollToStart() {
+        for (int i = 0; i < platforms.length; i++) {
+            platforms[i].setY(platforms[i].getStartY());
+        }
+        mainPlayer.setY(Game.height / 2 + 100);
+        mainPlayer.setX((Game.width - 50) / 2);
     }
 
 }

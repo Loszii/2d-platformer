@@ -4,13 +4,13 @@ import main.Game;
 import java.awt.Graphics;
 
 public class Entity {
-    protected int width;
-    protected int height;
-    protected int xPos;
-    protected int yPos;
-    protected GamePanel gamePanel;
-    protected double xAcc;
-    protected double yAcc;
+    private int width;
+    private int height;
+    private int xPos;
+    private int yPos;
+    private GamePanel gamePanel;
+    private double xAcc;
+    private double yAcc;
 
     public Entity(int width, int height, int xPos, int yPos, GamePanel gamePanel, double xAcc, double yAcc) {
         this.width = width;
@@ -37,18 +37,19 @@ public class Entity {
     }
 
     //getters
-    public double getYAcc() {
-        return yAcc;
-    }
-    public double getXAcc() {
-        return xAcc;
-    }
     public int getX() {
         return xPos;
     }
     public int getY() {
         return yPos;
     }
+    public double getYAcc() {
+        return yAcc;
+    }
+    public double getXAcc() {
+        return xAcc;
+    }
+
     public int getWidth() {
         return width;
     }
