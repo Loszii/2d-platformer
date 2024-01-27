@@ -30,7 +30,7 @@ public class GamePanel extends JPanel { //inherits from JPanel
     public GamePanel(){
         setPanelSize();
         addKeyListener(new KeyboardInputs(this)); //JPanel function
-        mainPlayer = new Player(50, 50, (Game.width - 50) / 2, Game.height / 2 + 100, this, 0, gravity);
+        mainPlayer = new Player(50, 50, (Game.width - 50) / 2, Game.height / 2 + 100, 0, gravity);
         platforms = generatePlats();
 
         collision = new Collision(mainPlayer, platforms);
@@ -126,10 +126,10 @@ public class GamePanel extends JPanel { //inherits from JPanel
         int maxPlatWidth = 400;
         int minPlatWidth = 200;
         int curWidth;
-        plats[0] = new Platform(Game.width + 2000, 25, -1000, (Game.height / 2 + mainPlayer.getHeight()) + 100, this, 0, 0); //platform under player
+        plats[0] = new Platform(Game.width + 2000, 25, -1000, (Game.height / 2 + mainPlayer.getHeight()) + 100, 0, 0); //platform under player
         for (int i = 1; i < plats.length; i++) {
             curWidth = rand.nextInt(maxPlatWidth - minPlatWidth) + minPlatWidth;
-            plats[i] = new Platform(curWidth, 25, rand.nextInt(Game.width - curWidth), yCounter, this, rand.nextInt(7), 0);
+            plats[i] = new Platform(curWidth, 25, rand.nextInt(Game.width - curWidth), yCounter, rand.nextInt(7), 0);
             yCounter -= rand.nextInt(200) + mainPlayer.getHeight() + 50;
         }
         return plats;

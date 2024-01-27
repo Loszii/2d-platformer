@@ -1,23 +1,19 @@
 package entity;
-import main.GamePanel;
 import main.Game;
-import java.awt.Graphics;
 
 public class Entity {
     private int width;
     private int height;
     private int xPos;
     private int yPos;
-    private GamePanel gamePanel;
     private double xAcc;
     private double yAcc;
 
-    public Entity(int width, int height, int xPos, int yPos, GamePanel gamePanel, double xAcc, double yAcc) {
+    public Entity(int width, int height, int xPos, int yPos, double xAcc, double yAcc) {
         this.width = width;
         this.height = height;
         this.xPos = xPos;
         this.yPos = yPos;
-        this.gamePanel = gamePanel;
         this.xAcc = xAcc;
         this.yAcc = yAcc;
     }

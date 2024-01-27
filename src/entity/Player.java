@@ -2,7 +2,6 @@ package entity;
 import main.GamePanel;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import java.awt.image.BufferedImageFilter;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import java.io.InputStream;
@@ -17,8 +16,8 @@ public class Player extends Entity{
     private BufferedImage walkImgRight;
     private BufferedImage walkImgLeft;
 
-    public Player(int width, int height, int xPos, int yPos, GamePanel gamePanel, double xAcc, double yAcc) {
-        super(width, height, xPos, yPos, gamePanel, xAcc, yAcc);
+    public Player(int width, int height, int xPos, int yPos, double xAcc, double yAcc) {
+        super(width, height, xPos, yPos, xAcc, yAcc);
         normImg = importImg("/res/player.png");
         airImg = importImg("/res/player_air.png");
         walkImgRight = importImg("/res/player_walk_right.png");

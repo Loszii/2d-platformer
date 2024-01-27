@@ -1,5 +1,4 @@
 package entity;
-import main.GamePanel;
 import java.awt.Graphics;
 import java.awt.Color;
 
@@ -8,8 +7,8 @@ public class Platform extends Entity{
     private int startY;
     private int borderSize = 1;
 
-    public Platform(int width, int height, int xPos, int yPos, GamePanel gamePanel, double xAcc, double yAcc) {
-        super(width, height, xPos, yPos, gamePanel, xAcc, yAcc);
+    public Platform(int width, int height, int xPos, int yPos, double xAcc, double yAcc) {
+        super(width, height, xPos, yPos, xAcc, yAcc);
         startY = yPos;
     }
 
