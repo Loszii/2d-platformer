@@ -57,10 +57,6 @@ public class Entity {
         return height;
     }
 
-    public void draw(Graphics g) {
-        g.fillRect(xPos, yPos, width, height);
-    }
-
     //takes in position values and checks if they are in bounds
     public boolean inBounds(int xVal, int yVal) {
         if (xVal < 0) {

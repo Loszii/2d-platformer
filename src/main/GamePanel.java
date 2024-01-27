@@ -2,6 +2,7 @@ package main;
 import java.util.Random;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.image.BufferedImage;
 import java.awt.Dimension;
 import javax.swing.JPanel;
 import inputs.KeyboardInputs;
@@ -22,10 +23,8 @@ public class GamePanel extends JPanel { //inherits from JPanel
     private boolean wPressed = false;
     private boolean aPressed = false;
     private boolean dPressed = false;
-    private int screenSpeed = 1;
-    private long startTime = System.currentTimeMillis();
-    private long currentTime;
     private long score;
+    private BufferedImage background;
 
 
     public GamePanel(){
@@ -35,6 +34,7 @@ public class GamePanel extends JPanel { //inherits from JPanel
         platforms = generatePlats();
 
         collision = new Collision(mainPlayer, platforms);
+        background = mainPlayer.importImg("/res/background.jpg");
 
     }
 
@@ -46,6 +46,10 @@ public class GamePanel extends JPanel { //inherits from JPanel
     public void paintComponent(Graphics g) { //needs graphics object, auto runs from JPanel
         //g is attribute of jPanel that was inherited
         super.paintComponent(g); //super is JPanel, calling JPanels own paint method with its pre defined graphics variable
+
+        //background
+        g.drawImage(background, 0, 0, null);
+
 
         if (wPressed) {
             if (mainPlayer.getGrounded()) {
@@ -83,26 +87,25 @@ public class GamePanel extends JPanel { //inherits from JPanel
             platforms[i].applyXAcc();
         }
 
+        //scrolling and score
+        if (mainPlayer.getY() < Game.height / 2) {
+            scrollScreen(gravity);
+            score += gravity;
+        } else if (mainPlayer.getY() > 3 * Game.height / 4){
+            scrollScreen(-1 * gravity);
+            score -= gravity;
+        }
+
         //drawing
-        g.setColor(new Color(0, 0, 0));
-        scrollScreen();
 
         mainPlayer.draw(g);
-        g.setColor(new Color(255, 0, 0));
         for (int i = 0; i < platforms.length; i++) {
             platforms[i].draw(g);
         }
-        g.setColor(new Color(0, 0, 0));
+        g.setColor(new Color(255, 255, 255));
         g.setFont(new Font("font", 3, 50));
-        g.drawString(String.valueOf(score), Game.width /2 , 50);
-        currentTime = System.currentTimeMillis();
-        score = (currentTime - startTime) / 1000;
+        g.drawString(String.valueOf(score / 100), Game.width /2 , 50);
 
-        //game over
-        if (mainPlayer.getY() > Game.height + 150) {
-            scrollToStart();
-            startTime = System.currentTimeMillis();
-        }
     }
 
     public void setWPressed(boolean bool) {
@@ -115,8 +118,9 @@ public class GamePanel extends JPanel { //inherits from JPanel
         dPressed = bool;
     }
 
+    //generates a bunch of random platforms in the sky
     public Platform[] generatePlats() {
-        Platform[] plats = new Platform[1000];
+        Platform[] plats = new Platform[100];
         Random rand = new Random();
         int yCounter = (Game.height / 2 + mainPlayer.getHeight());
         int maxPlatWidth = 400;
@@ -131,7 +135,7 @@ public class GamePanel extends JPanel { //inherits from JPanel
         return plats;
     }
 
-    public void scrollScreen() {
+    public void scrollScreen(int screenSpeed) {
         mainPlayer.setY(mainPlayer.getY() + screenSpeed);
         for (int i = 0; i < platforms.length; i++) {
             platforms[i].setY(platforms[i].getY() + screenSpeed);

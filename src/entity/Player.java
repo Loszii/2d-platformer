@@ -1,14 +1,38 @@
 package entity;
 import main.GamePanel;
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+import java.awt.image.BufferedImageFilter;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+import java.io.InputStream;
 
 public class Player extends Entity{
 
     private boolean isGrounded = true;
     private double xAccOfGround = 0;
     private double maxXAcc = 12.5;
+    private BufferedImage normImg;
+    private BufferedImage airImg;
+    private BufferedImage walkImgRight;
+    private BufferedImage walkImgLeft;
 
     public Player(int width, int height, int xPos, int yPos, GamePanel gamePanel, double xAcc, double yAcc) {
         super(width, height, xPos, yPos, gamePanel, xAcc, yAcc);
+        normImg = importImg("/res/player.png");
+        airImg = importImg("/res/player_air.png");
+        walkImgRight = importImg("/res/player_walk_right.png");
+        walkImgLeft = importImg("/res/player_walk_left.png");
+    }
+
+    public BufferedImage importImg(String filePath) {
+        InputStream is = getClass().getResourceAsStream(filePath);
+        try {
+            return ImageIO.read(is);
+        } catch (IOException e) {
+            return new BufferedImage(0, 0, 0); //if dont work just feed random img lol
+        }
+
     }
 
     public boolean getGrounded() {
@@ -66,4 +90,15 @@ public class Player extends Entity{
         }
     }
 
+    public void draw(Graphics g) {
+        if (!getGrounded()) {
+            g.drawImage(airImg, getX(), getY(), null);
+        }  else if (getXAcc() > getXAccOfGround()) {
+            g.drawImage(walkImgRight, getX(), getY(), null);
+        } else if (getXAcc() < getXAccOfGround()) {
+            g.drawImage(walkImgLeft, getX(), getY(), null);
+        } else {
+            g.drawImage(normImg, getX(), getY(), null);
+        }
+    }
 }
