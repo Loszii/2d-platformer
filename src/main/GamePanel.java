@@ -8,6 +8,7 @@ import inputs.KeyboardInputs;
 import entity.Player;
 import entity.Platform;
 import entity.Collision;
+import java.awt.Font;
 
 //make platforms teleport from one side to the other and move, as well as game scroll upwards
 
@@ -22,6 +23,9 @@ public class GamePanel extends JPanel { //inherits from JPanel
     private boolean aPressed = false;
     private boolean dPressed = false;
     private int screenSpeed = 1;
+    private long startTime = System.currentTimeMillis();
+    private long currentTime;
+    private long score;
 
 
     public GamePanel(){
@@ -82,14 +86,22 @@ public class GamePanel extends JPanel { //inherits from JPanel
         //drawing
         g.setColor(new Color(0, 0, 0));
         scrollScreen();
+
         mainPlayer.draw(g);
         g.setColor(new Color(255, 0, 0));
         for (int i = 0; i < platforms.length; i++) {
             platforms[i].draw(g);
         }
+        g.setColor(new Color(0, 0, 0));
+        g.setFont(new Font("font", 3, 50));
+        g.drawString(String.valueOf(score), Game.width /2 , 50);
+        currentTime = System.currentTimeMillis();
+        score = (currentTime - startTime) / 1000;
 
+        //game over
         if (mainPlayer.getY() > Game.height + 150) {
             scrollToStart();
+            startTime = System.currentTimeMillis();
         }
     }
 
@@ -113,8 +125,8 @@ public class GamePanel extends JPanel { //inherits from JPanel
         plats[0] = new Platform(Game.width + 2000, 25, -1000, (Game.height / 2 + mainPlayer.getHeight()) + 100, this, 0, 0); //platform under player
         for (int i = 1; i < plats.length; i++) {
             curWidth = rand.nextInt(maxPlatWidth - minPlatWidth) + minPlatWidth;
-            plats[i] = new Platform(curWidth, 25, rand.nextInt(Game.width - curWidth), yCounter, this, rand.nextInt(6), 0);
-            yCounter -= 200;
+            plats[i] = new Platform(curWidth, 25, rand.nextInt(Game.width - curWidth), yCounter, this, rand.nextInt(7), 0);
+            yCounter -= rand.nextInt(200) + mainPlayer.getHeight() + 50;
         }
         return plats;
     }

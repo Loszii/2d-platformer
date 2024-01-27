@@ -11,6 +11,8 @@ public class Collision {
         this.platforms = platforms;
     }
 
+    //to do: sometimes corner bugs, add slight boundry when checking from top and bottom if it is actually blocking
+
     //collision detections
     //these functions take in a new coord position and a platform and check player can move to val despite given platform
     public boolean isTopBlocked() {
@@ -88,4 +90,5 @@ public class Collision {
             mainPlayer.setX(-50);
         }
     }
+
 }
