@@ -26,26 +26,6 @@ public class Collision {
         return false;
     }
 
-    public boolean isRightBlocked() {
-        for (int i = 0; i < platforms.length; i++) {
-            if ((mainPlayer.getX() + mainPlayer.getWidth()) > platforms[i].getX() || mainPlayer.getY() > (platforms[i].getY() + platforms[i].getHeight()) || (mainPlayer.getY() + mainPlayer.getHeight()) < platforms[i].getY()){
-                ;
-            } else if ((mainPlayer.getX() + mainPlayer.getXAcc() + mainPlayer.getWidth()) > platforms[i].getX()) {
-                return true;
-            }
-        }
-        return false;
-    }
-    public boolean isLeftBlocked() {
-        for (int i = 0; i < platforms.length; i++) {
-            if (mainPlayer.getX() < (platforms[i].getX() + platforms[i].getWidth()) || mainPlayer.getY() > (platforms[i].getY() + platforms[i].getHeight()) || (mainPlayer.getY() + mainPlayer.getHeight()) < platforms[i].getY()){
-                ;
-            } else if (mainPlayer.getX() + mainPlayer.getXAcc() < (platforms[i].getX() + platforms[i].getWidth())) {
-                return true;
-            }
-        }
-        return false;
-    }
     public boolean isBotBlocked() {
         for (int i = 0; i < platforms.length; i++) {
             if ((mainPlayer.getY() + mainPlayer.getHeight()) > platforms[i].getY() || mainPlayer.getX() > (platforms[i].getX() + platforms[i].getWidth()) || (mainPlayer.getX() + mainPlayer.getWidth()) < platforms[i].getX()) {
@@ -58,29 +38,28 @@ public class Collision {
         return false;
     }
 
+
     //platform collisions
-    public boolean checkPlayerToLeft() {
+    public void checkPlayerToLeft() {
         for (int i = 0; i < platforms.length; i++) {
             if (platforms[i].getX() < (mainPlayer.getX() + mainPlayer.getWidth()) || platforms[i].getY() > (mainPlayer.getY() + mainPlayer.getHeight()) || (platforms[i].getY() + platforms[i].getHeight()) < mainPlayer.getY()){
                 ;
             } else if (platforms[i].getX() + platforms[i].getXAcc() < (mainPlayer.getX() + mainPlayer.getWidth() + mainPlayer.getXAcc())) {
                 mainPlayer.setXAcc(platforms[i].getXAcc());
-                return true;
+                break;
             }
         }
-        return false;
     }
 
-    public boolean checkPlayerToRight() {
+    public void checkPlayerToRight() {
         for (int i = 0; i < platforms.length; i++) {
             if ((platforms[i].getX() + platforms[i].getWidth()) > mainPlayer.getX() || platforms[i].getY() > (mainPlayer.getY() + mainPlayer.getHeight()) || (platforms[i].getY() + platforms[i].getHeight()) < mainPlayer.getY()){
                 ;
             } else if ((platforms[i].getX() + platforms[i].getXAcc() + platforms[i].getWidth()) > mainPlayer.getX() + mainPlayer.getXAcc()) {
                 mainPlayer.setXAcc(platforms[i].getXAcc());
-                return true;
+                break;
             }
         }
-        return false;
     }
 
     public void checkOutOfBounds() {

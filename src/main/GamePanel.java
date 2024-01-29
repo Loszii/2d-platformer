@@ -73,12 +73,9 @@ public class GamePanel extends JPanel { //inherits from JPanel
         } else {
             mainPlayer.setGrounded(false);
         }
-        if (collision.isRightBlocked() || collision.isLeftBlocked()) {
-            mainPlayer.setXAcc(0);
-        }
         collision.checkPlayerToLeft();
         collision.checkPlayerToRight();
-        collision.checkOutOfBounds();
+        collision.checkOutOfBounds(); //check if player must appear on other side of screen
 
         //movement
         mainPlayer.applyXAcc();
