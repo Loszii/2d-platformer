@@ -11,7 +11,7 @@ import entity.Platform;
 import entity.Collision;
 import java.awt.Font;
 
-//make platforms teleport from one side to the other and move, as well as game scroll upwards
+//to do: have platforms have random y acceleration and flip when they collide with another platform
 
 public class GamePanel extends JPanel { //inherits from JPanel
 
@@ -64,24 +64,14 @@ public class GamePanel extends JPanel { //inherits from JPanel
         }
 
         //collision
-        if (collision.isTopBlocked()) {
-            mainPlayer.setYAcc(0);
-        }
-        if (collision.isBotBlocked()) {
-            mainPlayer.setYAcc(0);
-            mainPlayer.setGrounded(true);
-        } else {
-            mainPlayer.setGrounded(false);
-        }
-        collision.checkPlayerToLeft();
-        collision.checkPlayerToRight();
-        collision.checkOutOfBounds(); //check if player must appear on other side of screen
+        collision.checkCol();
 
         //movement
         mainPlayer.applyXAcc();
         mainPlayer.applyYAcc();
         for (int i = 0; i < platforms.length; i++) {
             platforms[i].applyXAcc();
+            platforms[i].applyYAcc(); //remove later
         }
 
         //scrolling and score
@@ -94,7 +84,6 @@ public class GamePanel extends JPanel { //inherits from JPanel
         }
 
         //drawing
-
         mainPlayer.draw(g);
         for (int i = 0; i < platforms.length; i++) {
             platforms[i].draw(g);

@@ -21,6 +21,10 @@ public class Platform extends Entity{
 
     }
 
+    public void applyYAcc() {
+        setY(getY() + (int) getYAcc());
+    }
+
     public int getStartY() {
         return startY;
     }

@@ -6,6 +6,8 @@ import main.GamePanel;
 public class KeyboardInputs implements KeyListener {
     private GamePanel gamePanel;
 
+    //to do: sometimes doesnt connect lol idk y
+
     public KeyboardInputs(GamePanel gamePanel) {
         this.gamePanel = gamePanel;
     }
