@@ -1,5 +1,9 @@
 package entity;
 import main.Game;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
+import javax.imageio.ImageIO;
 
 public class Entity {
     private int width;
@@ -61,6 +65,15 @@ public class Entity {
             return false;
         }
         return true;
+    }
+
+    public BufferedImage importImg(String filePath) {
+        InputStream is = getClass().getResourceAsStream(filePath);
+        try {
+            return ImageIO.read(is);
+        } catch (IOException e) {
+            return new BufferedImage(0, 0, 0); //if dont work just feed random img lol
+        }
     }
 
 }

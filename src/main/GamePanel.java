@@ -19,22 +19,23 @@ public class GamePanel extends JPanel { //inherits from JPanel
     private Player mainPlayer;
     private Platform[] platforms;
     private Collision collision;
-    //make platform array of on screen ones to fasten collission detection
     private boolean wPressed = false;
     private boolean aPressed = false;
     private boolean dPressed = false;
-    private long score;
-    private BufferedImage background;
-
+    private int score;
+    private BufferedImage grass;
+    private BufferedImage sky;
+    private BufferedImage space;
 
     public GamePanel(){
         setPanelSize();
         addKeyListener(new KeyboardInputs(this)); //JPanel function
         mainPlayer = new Player(50, 50, (Game.width - 50) / 2, Game.height / 2 + 100, 0, gravity);
+        grass = mainPlayer.importImg("/res/grass.jpg");
+        sky = mainPlayer.importImg("/res/sky.jpg");
+        space = mainPlayer.importImg("/res/space.jpg");
         platforms = generatePlats();
-
         collision = new Collision(mainPlayer, platforms);
-        background = mainPlayer.importImg("/res/background.jpg");
 
     }
 
@@ -48,8 +49,13 @@ public class GamePanel extends JPanel { //inherits from JPanel
         super.paintComponent(g); //super is JPanel, calling JPanels own paint method with its pre defined graphics variable
 
         //background
-        g.drawImage(background, 0, 0, null);
-
+        if (score / 100 < 50) {
+            g.drawImage(grass, 0, 0, null);
+        } else if (score / 100 < 100) {
+            g.drawImage(sky, 0, 0, null);
+        } else {
+            g.drawImage(space, 0, 0, null);
+        }
 
         if (wPressed) {
             if (mainPlayer.getGrounded()) {
@@ -57,9 +63,11 @@ public class GamePanel extends JPanel { //inherits from JPanel
             }
         }
         if (aPressed && mainPlayer.isWithinSpeed()) {
+            mainPlayer.setFacingRight(false);
             mainPlayer.setXAcc(mainPlayer.getXAcc() - 0.5);
         }
         if (dPressed && mainPlayer.isWithinSpeed()) {
+            mainPlayer.setFacingRight(true);
             mainPlayer.setXAcc(mainPlayer.getXAcc() + 0.5);
         }
 

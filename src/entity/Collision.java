@@ -20,9 +20,6 @@ public class Collision {
         checkOutOfBounds();
     }
 
-    //to do: maybe remove ; and clean up top if statements to look like diagonal
-    //cant move for loops out of function since needs to break and not check other plats for same side of collision, mainly ground
-
     //collision detections
     //these functions check if an object with collide with another by first checking if its coords are lined up with the side to check, and second if their accelerations will make them overlap
     private void checkPlatformTop() {
