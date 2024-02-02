@@ -26,6 +26,7 @@ public class GamePanel extends JPanel { //inherits from JPanel
     private BufferedImage grass;
     private BufferedImage sky;
     private BufferedImage space;
+    private int frameCounter = 0; //for walk animation 
 
     public GamePanel(){
         setPanelSize();
@@ -49,9 +50,9 @@ public class GamePanel extends JPanel { //inherits from JPanel
         super.paintComponent(g); //super is JPanel, calling JPanels own paint method with its pre defined graphics variable
 
         //background
-        if (score / 100 < 50) {
+        if (score / 100 < 100) {
             g.drawImage(grass, 0, 0, null);
-        } else if (score / 100 < 100) {
+        } else if (score / 100 < 200) {
             g.drawImage(sky, 0, 0, null);
         } else {
             g.drawImage(space, 0, 0, null);
@@ -99,7 +100,19 @@ public class GamePanel extends JPanel { //inherits from JPanel
         g.setColor(new Color(255, 255, 255));
         g.setFont(new Font("font", 3, 50));
         g.drawString(String.valueOf(score / 100), Game.width /2 , 50);
-
+        //change walk frame
+        if (mainPlayer.getXAcc() != mainPlayer.getXAccOfGround() && checkFrameCounter()) {
+            if (mainPlayer.getWalkFrame() < 3) {
+                mainPlayer.setWalkFrame(mainPlayer.getWalkFrame() + 1);
+                frameCounter = 0;
+            } else {
+                mainPlayer.setWalkFrame(0);
+            }
+        } else if (mainPlayer.getXAcc() == mainPlayer.getXAccOfGround()){
+            mainPlayer.setWalkFrame(0);
+            frameCounter = 0;
+        }
+        frameCounter += 1;
     }
 
     public void setWPressed(boolean bool) {
@@ -142,6 +155,16 @@ public class GamePanel extends JPanel { //inherits from JPanel
         }
         mainPlayer.setY(Game.height / 2 + 100);
         mainPlayer.setX((Game.width - 50) / 2);
+    }
+
+    public boolean checkFrameCounter() {
+        int xDiff = (int) (mainPlayer.getXAcc() - mainPlayer.getXAccOfGround());
+        if (xDiff > 0 && frameCounter > 17 - xDiff) {
+            return true;
+        } else if (frameCounter > 17 + xDiff) {
+            return true;
+        }
+        return false;
     }
 
 }
