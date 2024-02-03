@@ -18,6 +18,7 @@ public class GamePanel extends JPanel { //inherits from JPanel
     public static final int gravity = 5;
     private Player mainPlayer;
     private Platform[] platforms;
+    private int[] platWidths = {200, 250, 300, 350, 400};
     private Collision collision;
     private boolean wPressed = false;
     private boolean aPressed = false;
@@ -32,9 +33,9 @@ public class GamePanel extends JPanel { //inherits from JPanel
         setPanelSize();
         addKeyListener(new KeyboardInputs(this)); //JPanel function
         mainPlayer = new Player(50, 50, (Game.width - 50) / 2, Game.height / 2 + 100, 0, gravity);
-        grass = mainPlayer.importImg("/res/grass.jpg");
-        sky = mainPlayer.importImg("/res/sky.jpg");
-        space = mainPlayer.importImg("/res/space.jpg");
+        grass = mainPlayer.importImg("/res/background/grass.jpg");
+        sky = mainPlayer.importImg("/res/background/sky.jpg");
+        space = mainPlayer.importImg("/res/background/space.jpg");
         platforms = generatePlats();
         collision = new Collision(mainPlayer, platforms);
 
@@ -74,6 +75,9 @@ public class GamePanel extends JPanel { //inherits from JPanel
 
         //collision
         collision.checkCol();
+        if (score < 0) { //if under plat just exit (change this to game over later)
+            System.exit(0);
+        }
 
         //movement
         mainPlayer.applyXAcc();
@@ -130,12 +134,10 @@ public class GamePanel extends JPanel { //inherits from JPanel
         Platform[] plats = new Platform[100];
         Random rand = new Random();
         int yCounter = (Game.height / 2 + mainPlayer.getHeight());
-        int maxPlatWidth = 400;
-        int minPlatWidth = 200;
         int curWidth;
-        plats[0] = new Platform(Game.width + 2000, 25, -1000, (Game.height / 2 + mainPlayer.getHeight()) + 100, 0, 0); //platform under player
+        plats[0] = new Platform(400, 25, Game.width / 2 - 200, (Game.height / 2 + mainPlayer.getHeight()) + 100, 0, 0); //platform under player
         for (int i = 1; i < plats.length; i++) {
-            curWidth = rand.nextInt(maxPlatWidth - minPlatWidth) + minPlatWidth;
+            curWidth = platWidths[rand.nextInt(platWidths.length)];
             plats[i] = new Platform(curWidth, 25, rand.nextInt(Game.width - curWidth), yCounter, rand.nextInt(7), 0);
             yCounter -= rand.nextInt(200) + mainPlayer.getHeight() + 50;
         }
@@ -147,14 +149,6 @@ public class GamePanel extends JPanel { //inherits from JPanel
         for (int i = 0; i < platforms.length; i++) {
             platforms[i].setY(platforms[i].getY() + screenSpeed);
         }
-    }
-
-    public void scrollToStart() {
-        for (int i = 0; i < platforms.length; i++) {
-            platforms[i].setY(platforms[i].getStartY());
-        }
-        mainPlayer.setY(Game.height / 2 + 100);
-        mainPlayer.setX((Game.width - 50) / 2);
     }
 
     public boolean checkFrameCounter() {

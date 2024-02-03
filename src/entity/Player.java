@@ -25,18 +25,18 @@ public class Player extends Entity{
 
     public Player(int width, int height, int xPos, int yPos, double xAcc, double yAcc) {
         super(width, height, xPos, yPos, xAcc, yAcc);
-        airRightImg = importImg("/res/player_air_right.png");
-        airLeftImg = importImg("/res/player_air_left.png");
-        idleRightImg = importImg("/res/player_idle_right.png");
-        idleLeftImg = importImg("/res/player_idle_left.png");
-        playerWalkR1 = importImg("/res/player_walk1_right.png");
-        playerWalkR2 = importImg("/res/player_walk2_right.png");
-        playerWalkR3 = importImg("/res/player_walk3_right.png");
-        playerWalkR4 = importImg("/res/player_walk4_right.png");
-        playerWalkL1 = importImg("/res/player_walk1_left.png");
-        playerWalkL2 = importImg("/res/player_walk2_left.png");
-        playerWalkL3 = importImg("/res/player_walk3_left.png");
-        playerWalkL4 = importImg("/res/player_walk4_left.png");
+        airRightImg = importImg("/res/player/player_air_right.png");
+        airLeftImg = importImg("/res/player/player_air_left.png");
+        idleRightImg = importImg("/res/player/player_idle_right.png");
+        idleLeftImg = importImg("/res/player/player_idle_left.png");
+        playerWalkR1 = importImg("/res/player/player_walk1_right.png");
+        playerWalkR2 = importImg("/res/player/player_walk2_right.png");
+        playerWalkR3 = importImg("/res/player/player_walk3_right.png");
+        playerWalkR4 = importImg("/res/player/player_walk4_right.png");
+        playerWalkL1 = importImg("/res/player/player_walk1_left.png");
+        playerWalkL2 = importImg("/res/player/player_walk2_left.png");
+        playerWalkL3 = importImg("/res/player/player_walk3_left.png");
+        playerWalkL4 = importImg("/res/player/player_walk4_left.png");
     }
 
     public boolean getGrounded() {
