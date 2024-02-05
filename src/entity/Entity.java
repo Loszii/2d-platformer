@@ -22,6 +22,12 @@ public class Entity {
         this.yAcc = yAcc;
     }
 
+    public Entity(int width, int height, int xPos) {
+        this.width = width;
+        this.height = height;
+        this.xPos = xPos;
+    }
+
     //setters
     public void setX(int value) {
         xPos = value;

@@ -1,5 +1,6 @@
 package entity;
 import main.Game;
+import main.GamePanel;
 
 public class Collision {
 
@@ -18,6 +19,7 @@ public class Collision {
         checkPlayerRight();
         checkPlayerDiagonal();
         checkOutOfBounds();
+        checkCarrot();
     }
 
     //collision detections
@@ -120,6 +122,23 @@ public class Collision {
                     if ((mainPlayer.getX() + mainPlayer.getXAcc()) < (platforms[i].getX() + platforms[i].getWidth() + platforms[i].getXAcc()) && (mainPlayer.getY() + mainPlayer.getYAcc()) < (platforms[i].getY() + platforms[i].getHeight() + platforms[i].getYAcc())) {
                         mainPlayer.setXAcc(platforms[i].getXAcc());
                         break;
+                    }
+                }
+            }
+        }
+    }
+
+    //for each platforms if has carrot, check if player inside, if so, add jump height and set hasCarrot attribute in palt to no
+    public void checkCarrot() {
+        for (int i = 0; i < platforms.length; i++) {
+            if (platforms[i].getY() > 0 && platforms[i].getY() < Game.height) {
+                if (platforms[i].getCarrot() != null) {
+                    if ((mainPlayer.getX() + mainPlayer.getWidth()) > (platforms[i].getX() + (platforms[i].getCarrot().getX())) && mainPlayer.getX() < (platforms[i].getX() + (platforms[i].getCarrot().getX() + platforms[i].getCarrot().getWidth()))) {
+                        if ((mainPlayer.getY() + mainPlayer.getHeight()) > (platforms[i].getY() - platforms[i].getCarrot().getHeight()) && mainPlayer.getY() < platforms[i].getY()) {
+                            platforms[i].setCarrot(null);
+                            mainPlayer.setJumpHeight(mainPlayer.getJumpHeight() - 2.5);
+                            GamePanel.lowerGrav();
+                        }
                     }
                 }
             }

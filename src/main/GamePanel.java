@@ -9,6 +9,7 @@ import inputs.KeyboardInputs;
 import entity.Player;
 import entity.Platform;
 import entity.Collision;
+import entity.Carrot;
 import java.awt.Font;
 
 //to do: make carrot entity for player to increase jump
@@ -16,7 +17,7 @@ import java.awt.Font;
 
 public class GamePanel extends JPanel { //inherits from JPanel
 
-    public static final int gravity = 7;
+    public static double gravity = 9.0;
     private Player mainPlayer;
     private Platform[] platforms;
     private int[] platWidths = {200, 250, 300, 350, 400};
@@ -43,6 +44,12 @@ public class GamePanel extends JPanel { //inherits from JPanel
     private void setPanelSize() {
         Dimension size = new Dimension(Game.width, Game.height);
         setPreferredSize(size);
+    }
+
+    public static void lowerGrav() {
+        if (gravity > 3.0) {
+            gravity -= 0.5;
+        }
     }
 
     public void paintComponent(Graphics g) { //needs graphics object, auto runs from JPanel
@@ -126,14 +133,20 @@ public class GamePanel extends JPanel { //inherits from JPanel
 
     //generates a bunch of random platforms in the sky
     public Platform[] generatePlats() {
-        Platform[] plats = new Platform[100];
+        Platform[] plats = new Platform[500];
         Random rand = new Random();
         int yCounter = Game.height - 400;
         int curWidth;
-        plats[0] = new Platform(2120, 300, -100, Game.height - 300, 0, 0); //platform under player
+        Carrot carrot;
+        plats[0] = new Platform(2120, 300, -100, Game.height - 300, 0, 0, null); //platform under player
         for (int i = 1; i < plats.length; i++) {
             curWidth = platWidths[rand.nextInt(platWidths.length)];
-            plats[i] = new Platform(curWidth, 25, rand.nextInt(Game.width - curWidth), yCounter, rand.nextInt(7), 0);
+            if ((i - 1) % 25 - (i / 50) == 0) { //every 25th plat has carrot, as spacing bigger needs to be more often
+                carrot = new Carrot(25, 25, rand.nextInt(curWidth - 25));
+            } else {
+                carrot = null;
+            }
+            plats[i] = new Platform(curWidth, 25, rand.nextInt(Game.width - curWidth), yCounter, rand.nextInt(7), 0, carrot);
             yCounter -= 50 + rand.nextInt(100) + (5 * i); //gets farther as go up
         }
         return plats;
