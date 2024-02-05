@@ -89,10 +89,10 @@ public class GamePanel extends JPanel { //inherits from JPanel
         }
 
         //scrolling and score
-        if (mainPlayer.getY() < Game.height / 2) {
+        if (mainPlayer.getY() < Game.height / 2 && mainPlayer.getYAcc() < 0) {
             scrollScreen(Math.abs(((int) mainPlayer.getYAcc()))); //scroll screen of |yAcc| and change score by same amount
             score +=  Math.abs(((int) mainPlayer.getYAcc()));
-        } else if (mainPlayer.getY() > 3 * Game.height / 4){
+        } else if (mainPlayer.getY() > 3 * Game.height / 4 && mainPlayer.getYAcc() > 0){
             scrollScreen(-1 * Math.abs(((int) mainPlayer.getYAcc())));
             score -=  Math.abs(((int) mainPlayer.getYAcc()));
         }
@@ -141,13 +141,13 @@ public class GamePanel extends JPanel { //inherits from JPanel
         plats[0] = new Platform(2120, 300, -100, Game.height - 300, 0, 0, null); //platform under player
         for (int i = 1; i < plats.length; i++) {
             curWidth = platWidths[rand.nextInt(platWidths.length)];
-            if ((i - 1) % 25 - (i / 50) == 0) { //every 25th plat has carrot, as spacing bigger needs to be more often
+            if ((i - 1) % (25 - (i * (1/25))) == 0) { //every 25th plat has carrot, as spacing bigger needs to be more often
                 carrot = new Carrot(25, 25, rand.nextInt(curWidth - 25));
             } else {
                 carrot = null;
             }
             plats[i] = new Platform(curWidth, 25, rand.nextInt(Game.width - curWidth), yCounter, rand.nextInt(7), 0, carrot);
-            yCounter -= 50 + rand.nextInt(100) + (5 * i); //gets farther as go up
+            yCounter -= 50 + rand.nextInt(100) + (4 * i); //gets farther as go up
         }
         return plats;
     }
