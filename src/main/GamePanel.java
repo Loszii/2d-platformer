@@ -11,11 +11,12 @@ import entity.Platform;
 import entity.Collision;
 import java.awt.Font;
 
-//to do: have platforms have random y acceleration and flip when they collide with another platform
+//to do: make carrot entity for player to increase jump
+//fix inputs sometimes not working
 
 public class GamePanel extends JPanel { //inherits from JPanel
 
-    public static final int gravity = 5;
+    public static final int gravity = 7;
     private Player mainPlayer;
     private Platform[] platforms;
     private int[] platWidths = {200, 250, 300, 350, 400};
@@ -24,7 +25,6 @@ public class GamePanel extends JPanel { //inherits from JPanel
     private boolean aPressed = false;
     private boolean dPressed = false;
     private int score;
-    private BufferedImage grass;
     private BufferedImage sky;
     private BufferedImage space;
     private int frameCounter = 0; //for walk animation 
@@ -32,8 +32,7 @@ public class GamePanel extends JPanel { //inherits from JPanel
     public GamePanel(){
         setPanelSize();
         addKeyListener(new KeyboardInputs(this)); //JPanel function
-        mainPlayer = new Player(50, 50, (Game.width - 50) / 2, Game.height / 2 + 100, 0, gravity);
-        grass = mainPlayer.importImg("/res/background/grass.jpg");
+        mainPlayer = new Player(50, 50, (Game.width - 50) / 2, Game.height - 350, 0, gravity);
         sky = mainPlayer.importImg("/res/background/sky.jpg");
         space = mainPlayer.importImg("/res/background/space.jpg");
         platforms = generatePlats();
@@ -51,9 +50,7 @@ public class GamePanel extends JPanel { //inherits from JPanel
         super.paintComponent(g); //super is JPanel, calling JPanels own paint method with its pre defined graphics variable
 
         //background
-        if (score / 100 < 100) {
-            g.drawImage(grass, 0, 0, null);
-        } else if (score / 100 < 200) {
+        if (score / 100 < 500) {
             g.drawImage(sky, 0, 0, null);
         } else {
             g.drawImage(space, 0, 0, null);
@@ -61,7 +58,7 @@ public class GamePanel extends JPanel { //inherits from JPanel
 
         if (wPressed) {
             if (mainPlayer.getGrounded()) {
-                mainPlayer.setYAcc(-17.5);
+                mainPlayer.setYAcc(mainPlayer.getJumpHeight());
             }
         }
         if (aPressed && mainPlayer.isWithinSpeed()) {
@@ -75,9 +72,6 @@ public class GamePanel extends JPanel { //inherits from JPanel
 
         //collision
         collision.checkCol();
-        if (score < 0) { //if under plat just exit (change this to game over later)
-            System.exit(0);
-        }
 
         //movement
         mainPlayer.applyXAcc();
@@ -89,11 +83,11 @@ public class GamePanel extends JPanel { //inherits from JPanel
 
         //scrolling and score
         if (mainPlayer.getY() < Game.height / 2) {
-            scrollScreen(gravity);
-            score += gravity;
+            scrollScreen(Math.abs(((int) mainPlayer.getYAcc()))); //scroll screen of |yAcc| and change score by same amount
+            score +=  Math.abs(((int) mainPlayer.getYAcc()));
         } else if (mainPlayer.getY() > 3 * Game.height / 4){
-            scrollScreen(-1 * gravity);
-            score -= gravity;
+            scrollScreen(-1 * Math.abs(((int) mainPlayer.getYAcc())));
+            score -=  Math.abs(((int) mainPlayer.getYAcc()));
         }
 
         //drawing
@@ -104,6 +98,7 @@ public class GamePanel extends JPanel { //inherits from JPanel
         g.setColor(new Color(255, 255, 255));
         g.setFont(new Font("font", 3, 50));
         g.drawString(String.valueOf(score / 100), Game.width /2 , 50);
+        
         //change walk frame
         if (mainPlayer.getXAcc() != mainPlayer.getXAccOfGround() && checkFrameCounter()) {
             if (mainPlayer.getWalkFrame() < 3) {
@@ -133,13 +128,13 @@ public class GamePanel extends JPanel { //inherits from JPanel
     public Platform[] generatePlats() {
         Platform[] plats = new Platform[100];
         Random rand = new Random();
-        int yCounter = (Game.height / 2 + mainPlayer.getHeight());
+        int yCounter = Game.height - 400;
         int curWidth;
-        plats[0] = new Platform(400, 25, Game.width / 2 - 200, (Game.height / 2 + mainPlayer.getHeight()) + 100, 0, 0); //platform under player
+        plats[0] = new Platform(2120, 300, -100, Game.height - 300, 0, 0); //platform under player
         for (int i = 1; i < plats.length; i++) {
             curWidth = platWidths[rand.nextInt(platWidths.length)];
             plats[i] = new Platform(curWidth, 25, rand.nextInt(Game.width - curWidth), yCounter, rand.nextInt(7), 0);
-            yCounter -= rand.nextInt(200) + mainPlayer.getHeight() + 50;
+            yCounter -= 50 + rand.nextInt(100) + (5 * i); //gets farther as go up
         }
         return plats;
     }

@@ -10,6 +10,7 @@ public class Player extends Entity{
     private boolean isGrounded = true;
     private double xAccOfGround = 0;
     private double maxXAcc = 12.5;
+    private double jumpHeight = -15.0; //increase this when player eats carrots
     private BufferedImage airRightImg;
     private BufferedImage airLeftImg;
     private BufferedImage idleRightImg;
@@ -51,6 +52,10 @@ public class Player extends Entity{
         return walkFrame;
     }
 
+    public double getJumpHeight() {
+        return jumpHeight;
+    }
+
     public void setFacingRight (boolean status) {
         facingRight = status;
     }
@@ -65,6 +70,10 @@ public class Player extends Entity{
 
     public void setWalkFrame(int frame) {
         walkFrame = frame;
+    }
+
+    public void setJumpHeight(double height) {
+        jumpHeight = height;
     }
 
     public void applyXAcc() {
