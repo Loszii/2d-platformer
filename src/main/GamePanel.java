@@ -4,16 +4,23 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import javax.swing.JPanel;
-import inputs.KeyboardInputs;
+import javax.swing.KeyStroke;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import entity.Player;
 import entity.Platform;
 import entity.Collision;
 import entity.Carrot;
 import java.awt.Font;
 
-//to do: make carrot entity for player to increase jump
+//to do: make gravity scale with score, not jump height. better organize code
 //fix inputs sometimes not working
+//make friction on ground greater, if isGrounded change xAcc more
+//add arrow key compatibility
+//raise boundaries on platform detection
 
 public class GamePanel extends JPanel { //inherits from JPanel
 
@@ -29,16 +36,87 @@ public class GamePanel extends JPanel { //inherits from JPanel
     private BufferedImage sky;
     private BufferedImage space;
     private int frameCounter = 0; //for walk animation 
+    private Action exitAction;
+    private Action upAction;
+    private Action upActionRelease;
+    private Action leftAction;
+    private Action leftActionRelease;
+    private Action rightAction;
+    private Action rightActionRelease;
+
+    //actions
+    public class exitAction extends AbstractAction {
+        public void actionPerformed(ActionEvent e) {
+            System.exit(0);
+        }
+    }
+    public class UpAction extends AbstractAction {
+        public void actionPerformed(ActionEvent e) {
+            wPressed = true;
+        }
+    }
+    public class UpActionRelease extends AbstractAction {
+        public void actionPerformed(ActionEvent e) {
+            wPressed = false;
+        }
+    }
+    public class LeftAction extends AbstractAction {
+        public void actionPerformed(ActionEvent e) {
+            aPressed = true;
+        }
+    }
+    public class LeftActionRelease extends AbstractAction {
+        public void actionPerformed(ActionEvent e) {
+            aPressed = false;
+        }
+    }
+    public class RightAction extends AbstractAction {
+        public void actionPerformed(ActionEvent e) {
+            dPressed = true;
+        }
+    }
+    public class RightActionRelease extends AbstractAction {
+        public void actionPerformed(ActionEvent e) {
+            dPressed = false;
+        }
+    }
+
 
     public GamePanel(){
         setPanelSize();
-        addKeyListener(new KeyboardInputs(this)); //JPanel function
+
+        //addKeyListener(new KeyboardInputs(this)); //JPanel function
+        //instantiating entities
         mainPlayer = new Player(50, 50, (Game.width - 50) / 2, Game.height - 350, 0, gravity);
         sky = mainPlayer.importImg("/res/background/sky.jpg");
         space = mainPlayer.importImg("/res/background/space.jpg");
         platforms = generatePlats();
+
+        //collision object
         collision = new Collision(mainPlayer, platforms);
 
+        //keybindings
+        exitAction = new exitAction();
+        upAction = new UpAction();
+        upActionRelease = new UpActionRelease();
+        leftAction = new LeftAction();
+        leftActionRelease = new LeftActionRelease();
+        rightAction = new RightAction();
+        rightActionRelease = new RightActionRelease();
+        this.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0, true), "exit");//true is onRelease
+        this.getActionMap().put("exit", exitAction);
+        this.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_W, 0, false), "up");
+        this.getActionMap().put("up", upAction);
+        this.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_W, 0, true), "upRelease");
+        this.getActionMap().put("upRelease", upActionRelease);
+        this.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_A, 0, false), "left");
+        this.getActionMap().put("left", leftAction);
+        this.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_A, 0, true), "leftRelease");
+        this.getActionMap().put("leftRelease", leftActionRelease);
+        this.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_D, 0, false), "right");
+        this.getActionMap().put("right", rightAction);
+        this.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_D, 0, true), "rightRelease");
+        this.getActionMap().put("rightRelease", rightActionRelease);
     }
 
     private void setPanelSize() {
@@ -63,6 +141,7 @@ public class GamePanel extends JPanel { //inherits from JPanel
             g.drawImage(space, 0, 0, null);
         }
 
+        //movement
         if (wPressed) {
             if (mainPlayer.getGrounded()) {
                 mainPlayer.setYAcc(mainPlayer.getJumpHeight());
