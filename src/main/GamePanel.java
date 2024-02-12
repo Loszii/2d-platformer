@@ -17,25 +17,25 @@ import entity.Carrot;
 import java.awt.Font;
 
 //to do: make gravity scale with score, not jump height. better organize code
-//fix inputs sometimes not working
-//make friction on ground greater, if isGrounded change xAcc more
-//add arrow key compatibility
-//raise boundaries on platform detection
+//maybe put actions in a different file
+//collision detection seems to not be working properly with new friction values
+//maybe to simplify make it so player can jump through platforms and add enemies to make game harder, not just parkour
+//if keeping carrots, make them bigger
 
 public class GamePanel extends JPanel { //inherits from JPanel
 
+    private int[] platWidths = {200, 250, 300, 350, 400};
+    private int score;
+    private int frameCounter = 0; //for walk animation 
     public static double gravity = 9.0;
     private Player mainPlayer;
     private Platform[] platforms;
-    private int[] platWidths = {200, 250, 300, 350, 400};
     private Collision collision;
     private boolean wPressed = false;
     private boolean aPressed = false;
     private boolean dPressed = false;
-    private int score;
     private BufferedImage sky;
     private BufferedImage space;
-    private int frameCounter = 0; //for walk animation 
     private Action exitAction;
     private Action upAction;
     private Action upActionRelease;
@@ -85,7 +85,6 @@ public class GamePanel extends JPanel { //inherits from JPanel
     public GamePanel(){
         setPanelSize();
 
-        //addKeyListener(new KeyboardInputs(this)); //JPanel function
         //instantiating entities
         mainPlayer = new Player(50, 50, (Game.width - 50) / 2, Game.height - 350, 0, gravity);
         sky = mainPlayer.importImg("/res/background/sky.jpg");
@@ -103,6 +102,7 @@ public class GamePanel extends JPanel { //inherits from JPanel
         leftActionRelease = new LeftActionRelease();
         rightAction = new RightAction();
         rightActionRelease = new RightActionRelease();
+        //wasd
         this.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0, true), "exit");//true is onRelease
         this.getActionMap().put("exit", exitAction);
         this.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_W, 0, false), "up");
@@ -116,6 +116,19 @@ public class GamePanel extends JPanel { //inherits from JPanel
         this.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_D, 0, false), "right");
         this.getActionMap().put("right", rightAction);
         this.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_D, 0, true), "rightRelease");
+        this.getActionMap().put("rightRelease", rightActionRelease);
+        //arrow keys
+        this.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0, false), "up");
+        this.getActionMap().put("up", upAction);
+        this.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0, true), "upRelease");
+        this.getActionMap().put("upRelease", upActionRelease);
+        this.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0, false), "left");
+        this.getActionMap().put("left", leftAction);
+        this.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0, true), "leftRelease");
+        this.getActionMap().put("leftRelease", leftActionRelease);
+        this.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0, false), "right");
+        this.getActionMap().put("right", rightAction);
+        this.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0, true), "rightRelease");
         this.getActionMap().put("rightRelease", rightActionRelease);
     }
 
@@ -149,11 +162,11 @@ public class GamePanel extends JPanel { //inherits from JPanel
         }
         if (aPressed && mainPlayer.isWithinSpeed()) {
             mainPlayer.setFacingRight(false);
-            mainPlayer.setXAcc(mainPlayer.getXAcc() - 0.5);
+            mainPlayer.setXAcc(mainPlayer.getXAcc() - 1.0);
         }
         if (dPressed && mainPlayer.isWithinSpeed()) {
             mainPlayer.setFacingRight(true);
-            mainPlayer.setXAcc(mainPlayer.getXAcc() + 0.5);
+            mainPlayer.setXAcc(mainPlayer.getXAcc() + 1.0);
         }
 
         //collision

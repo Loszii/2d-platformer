@@ -10,7 +10,7 @@ public class Player extends Entity{
     private boolean isGrounded = true;
     private double xAccOfGround = 0;
     private double maxXAcc = 12.5;
-    private double jumpHeight = -15.0; //increase this when player eats carrots
+    private double jumpHeight = -15.0; //change this when player eats carrots
     private BufferedImage airRightImg;
     private BufferedImage airLeftImg;
     private BufferedImage idleRightImg;
@@ -80,14 +80,26 @@ public class Player extends Entity{
         if (!isGrounded) {
             setXAccOfGround(0);
         }
-        setX(getX() + (int) getXAcc()); //apply acceleration
-        if (getXAcc() != xAccOfGround) {
-            if (getXAcc() > xAccOfGround) {
-                setXAcc(getXAcc() - 0.25);
+        if (getXAcc() != xAccOfGround) { //friction applied below
+            //this removes flickering back and forth when reducing acceleration to norm
+            if (getXAcc() - xAccOfGround >= 1) {
+                if (isGrounded) {
+                    setXAcc(getXAcc() - 0.75); //ground has more friction
+                } else {
+                    setXAcc(getXAcc() - 0.7);
+                }
+            } else if (getXAcc() - xAccOfGround <= -1) {
+                if (isGrounded) {
+                    setXAcc(getXAcc() + 0.75);
+                } else {
+                    setXAcc(getXAcc() + 0.7);
+                }
             } else {
-                setXAcc(getXAcc() + 0.25); //applying friction
+                setXAcc(xAccOfGround);
             }
         }
+
+        setX(getX() + (int) getXAcc()); //apply acceleration
     }
 
     public void applyYAcc() {
@@ -100,13 +112,13 @@ public class Player extends Entity{
     //returns if players acc is within xAccOfGround +/- maxXAcc
     public boolean isWithinSpeed() {
         if (getXAcc() >= 0) {
-            if (getXAcc() > getXAccOfGround() + maxXAcc) {
+            if (getXAcc() > xAccOfGround + maxXAcc) {
                 return false;
             } else {
                 return true;
             }
         } else {
-            if (getXAcc() < getXAccOfGround() - maxXAcc) {
+            if (getXAcc() < xAccOfGround - maxXAcc) {
                 return false;
             } else {
                 return true;
@@ -116,7 +128,7 @@ public class Player extends Entity{
 
     public void draw(Graphics g) {
         if (facingRight) {
-            if (getGrounded() && getXAcc() == getXAccOfGround()){
+            if (getGrounded() && getXAcc() == xAccOfGround){
                 g.drawImage(idleRightImg, getX(), getY(), null);
             } else if (!getGrounded()){
                 g.drawImage(airRightImg, getX(), getY(), null);
