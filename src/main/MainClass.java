@@ -17,6 +17,8 @@ public class MainClass {
         if (!sPressed) then check collision so player can go thru plats
 
         maybe remove plat y acc, never move up or down
+
+        fix score
          */
         new Game();
     }

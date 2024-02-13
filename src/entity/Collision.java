@@ -1,54 +1,57 @@
 package entity;
 import main.Game;
+import main.GamePanel;
 
 public class Collision {
 
     private Platform[] platforms;
     private Player mainPlayer;
+    private Platform closest;
 
-    public Collision(Player mainPlayer, Platform[] platforms) {
-        this.mainPlayer = mainPlayer;
-        this.platforms = platforms;
+    public Collision() {
+        this.mainPlayer = GamePanel.getPlayer();
+        this.platforms = GamePanel.getPlats();
     }
 
     public void checkCol() {
+        closest = getNearestPlat();
         checkOutOfBounds();
-        checkPlatformBot();
+        if (checkPlatformBot() && (!GamePanel.getSPressed() || GamePanel.getScore() <= 10)) {
+            mainPlayer.setGrounded(true);
+            mainPlayer.setXAccOfGround(closest.getXAcc());
+            mainPlayer.setYAcc(0);
+
+            //clicking to plat and changing score 
+            double yDiff = ((double) ((closest.getY() - mainPlayer.getHeight()) - mainPlayer.getY()));
+            mainPlayer.setY(closest.getY() - mainPlayer.getHeight());
+            GamePanel.setScore(GamePanel.getScore() + yDiff);
+        } else {
+            mainPlayer.setGrounded(false);
+        }
         checkCarrot();
     }
 
     //collision detections
-    private void checkPlatformBot() {
-        for (int i = 0; i < platforms.length; i++) {
-            if (platforms[i].getY() > 0 && platforms[i].getY() < Game.height) {
-                if ((mainPlayer.getY() + mainPlayer.getHeight()) > platforms[i].getY() || mainPlayer.getX() > (platforms[i].getX() + platforms[i].getWidth()) || (mainPlayer.getX() + mainPlayer.getWidth()) < platforms[i].getX()) {
-                    ;
-                } else if ((mainPlayer.getY() + mainPlayer.getHeight() + mainPlayer.getYAcc()) > platforms[i].getY() + platforms[i].getYAcc()) {
-                    mainPlayer.setGrounded(true);
-                    mainPlayer.setXAccOfGround(platforms[i].getXAcc());
-                    mainPlayer.setYAcc(platforms[i].getYAcc());
-                    break;
-                }
-                mainPlayer.setGrounded(false);
+    private boolean checkPlatformBot() {
+        if ((mainPlayer.getX() + mainPlayer.getWidth()) > closest.getX() && mainPlayer.getX() < closest.getX() + closest.getWidth()) {
+            if (mainPlayer.getY() + mainPlayer.getHeight() <= closest.getY() && (mainPlayer.getY() + mainPlayer.getHeight() + mainPlayer.getYAcc() >= closest.getY())) {
+                return true;
             }
         }
+        return false;
     }
 
     //for each platforms if has carrot, check if player inside, if so, add jump height and set hasCarrot attribute in palt to no
     public void checkCarrot() {
-        for (int i = 0; i < platforms.length; i++) {
-            if (platforms[i].getY() > 0 && platforms[i].getY() < Game.height) {
-                if (platforms[i].getCarrot() != null) {
-                    if ((mainPlayer.getX() + mainPlayer.getWidth()) > (platforms[i].getX() + (platforms[i].getCarrot().getX())) && mainPlayer.getX() < (platforms[i].getX() + (platforms[i].getCarrot().getX() + platforms[i].getCarrot().getWidth()))) {
-                        if ((mainPlayer.getY() + mainPlayer.getHeight()) > (platforms[i].getY() - platforms[i].getCarrot().getHeight()) && mainPlayer.getY() < platforms[i].getY()) {
-                            platforms[i].setCarrot(null);
-                            if (!mainPlayer.getAteCarrot()) { //doesnt stack just increase duration
-                                mainPlayer.setJumpHeight(mainPlayer.getJumpHeight() - 2.5);
-                            }
-                            mainPlayer.setAteCarrot(true);
-                            mainPlayer.setWhenAteCarrot(System.currentTimeMillis());
-                        }
+        if (closest.getCarrot() != null) {
+            if ((mainPlayer.getX() + mainPlayer.getWidth()) > (closest.getX() + (closest.getCarrot().getX())) && mainPlayer.getX() < (closest.getX() + (closest.getCarrot().getX() + closest.getCarrot().getWidth()))) {
+                if ((mainPlayer.getY() + mainPlayer.getHeight()) > (closest.getY() - closest.getCarrot().getHeight()) && mainPlayer.getY() < closest.getY()) {
+                    closest.setCarrot(null);
+                    if (!mainPlayer.getAteCarrot()) { //doesnt stack just increase duration
+                        mainPlayer.setJumpHeight(mainPlayer.getJumpHeight() - 5.0);
                     }
+                    mainPlayer.setAteCarrot(true);
+                    mainPlayer.setWhenAteCarrot(System.currentTimeMillis());
                 }
             }
         }
@@ -60,6 +63,19 @@ public class Collision {
         } else if (mainPlayer.getX() + mainPlayer.getWidth() > Game.width + 50) {
             mainPlayer.setX(-50);
         }
+    }
+
+    //returns plat that is closest to player in yDir
+    private Platform getNearestPlat() {
+        int curr;
+        Platform closest = platforms[0];
+        for (int i = 1; i < platforms.length; i++) {
+            curr = platforms[i].getY();
+            if (Math.abs(curr - (mainPlayer.getY() + mainPlayer.getHeight())) < Math.abs((closest.getY() - (mainPlayer.getY() + mainPlayer.getHeight())))) {
+                closest = platforms[i];
+            }
+        }
+        return closest;
     }
 
 }

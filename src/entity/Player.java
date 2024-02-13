@@ -4,12 +4,12 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
 public class Player extends Entity{
-
+    //make all static, only one player
     private int walkFrame = 0;
     private long whenAteCarrot;
     private double xAccOfGround = 0;
     private double maxXAcc = 12.5;
-    private double jumpHeight = -15.0; //change this when player eats carrots
+    private double jumpHeight = -15.0;
     private boolean facingRight = true;
     private boolean isGrounded = true;
     private boolean ateCarrot = false;
@@ -124,9 +124,11 @@ public class Player extends Entity{
 
     //moves player in y Dir
     public void applyYAcc() {
-        setY(getY() + (int) getYAcc());
-        if (getYAcc() != GamePanel.getGravity()) {
-            setYAcc(getYAcc() + 0.5);
+        if (!getGrounded()) {
+            setY(getY() + (int) getYAcc());
+            if ((getYAcc() != GamePanel.getGravity())) {
+                setYAcc(getYAcc() + 0.5);
+            }
         }
     }
 
@@ -151,7 +153,7 @@ public class Player extends Entity{
     public void checkCarrotRanOut() {
         if (System.currentTimeMillis() - whenAteCarrot > 10000) {
             ateCarrot = false;
-            setJumpHeight(getJumpHeight() + 2.5);
+            setJumpHeight(getJumpHeight() + 5.0);
         }
     }
 

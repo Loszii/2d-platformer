@@ -13,10 +13,11 @@ import java.awt.Font;
 public class GamePanel extends JPanel {
 
     private static int[] platWidths = {200, 300, 400};
-    private static int score;
+    private static double score;
     private static int frameCounter = 0; //for walk animation 
     private static final double gravity = 9.0;
     private static boolean wPressed = false;
+    private static boolean sPressed = false;
     private static boolean aPressed = false;
     private static boolean dPressed = false;
     private static Player mainPlayer;
@@ -32,7 +33,7 @@ public class GamePanel extends JPanel {
         platforms = generatePlats();
 
         //collision object
-        collision = new Collision(mainPlayer, platforms);
+        collision = new Collision();
 
         //make keybinding actions
         new KeyBinding(this);
@@ -44,32 +45,52 @@ public class GamePanel extends JPanel {
         setPreferredSize(size);
     }
 
-    public void setWPressed(boolean bool) {
+    public static void setWPressed(boolean bool) {
         wPressed = bool;
     }
-    public void setAPressed(boolean bool) {
+    public static void setSPressed(boolean bool) {
+        sPressed = bool;
+    }
+    public static void setAPressed(boolean bool) {
         aPressed = bool;
     }
-    public void setDPressed(boolean bool) {
+    public static void setDPressed(boolean bool) {
         dPressed = bool;
+    }
+    public static void setScore(double newScore) {
+        score = newScore;
     }
 
     //getters
+    public static double getScore() {
+        return score;
+    }
+    public static boolean getSPressed() {
+        return sPressed;
+    }
     public static double getGravity() {
         return gravity;
     }
+    public static Player getPlayer() {
+        return mainPlayer;
+    }
+    public static Platform[] getPlats() {
+        return platforms;
+    }
 
     //generates a bunch of random platforms in the sky
-    public Platform[] generatePlats() {
+    public static Platform[] generatePlats() {
         Platform[] plats = new Platform[1000];
         Random rand = new Random();
         int yCounter = Game.height - 400;
         int curWidth;
         Carrot carrot;
         plats[0] = new Platform(2120, 300, -100, Game.height - 300, 0, 0, null); //platform under player
+
+        //plat generation loop
         for (int i = 1; i < plats.length; i++) {
             curWidth = platWidths[rand.nextInt(platWidths.length)]; //gets random width
-            if (rand.nextInt(100) <= 7) { //7% chance
+            if (rand.nextInt(100) <= 5) { //5% chance
                 carrot = new Carrot(25, 25, rand.nextInt(curWidth - 25));
             } else {
                 carrot = null;
@@ -81,7 +102,7 @@ public class GamePanel extends JPanel {
     }
 
     //moves all thngs down by screenSpeed
-    public void scrollScreen(int screenSpeed) {
+    public static void scrollScreen(int screenSpeed) {
         mainPlayer.setY(mainPlayer.getY() + screenSpeed);
         for (int i = 0; i < platforms.length; i++) {
             platforms[i].setY(platforms[i].getY() + screenSpeed);
@@ -89,7 +110,7 @@ public class GamePanel extends JPanel {
     }
 
     //check when to update walk frame
-    public boolean checkFrameCounter() {
+    public static boolean checkFrameCounter() {
         int xDiff = (int) (mainPlayer.getXAcc() - mainPlayer.getXAccOfGround());
         if (xDiff > 0 && frameCounter > 17 - xDiff) {
             return true;
@@ -142,10 +163,11 @@ public class GamePanel extends JPanel {
         //scrolling and score
         if (mainPlayer.getY() < Game.height / 2 && mainPlayer.getYAcc() < 0) {
             scrollScreen(Math.abs(((int) mainPlayer.getYAcc()))); //scroll screen of |yAcc| and change score by same amount
-            score +=  Math.abs(((int) mainPlayer.getYAcc()));
         } else if (mainPlayer.getY() > 3 * Game.height / 4 && mainPlayer.getYAcc() > 0){
             scrollScreen(-1 * Math.abs(((int) mainPlayer.getYAcc())));
-            score -=  Math.abs(((int) mainPlayer.getYAcc()));
+        }
+        if (!mainPlayer.getGrounded()) {
+            score -=  (mainPlayer.getYAcc());
         }
 
         //drawing
@@ -155,7 +177,7 @@ public class GamePanel extends JPanel {
         mainPlayer.draw(g);
         g.setColor(new Color(0, 0, 0));
         g.setFont(new Font("font", 3, 50));
-        g.drawString(String.valueOf(score / 100), Game.width /2 , 50);
+        g.drawString(String.valueOf(score), Game.width /2 , 50);
         
         //change walk frame
         if (mainPlayer.getXAcc() != mainPlayer.getXAccOfGround() && checkFrameCounter()) {
