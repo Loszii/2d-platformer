@@ -6,11 +6,13 @@ import java.awt.image.BufferedImage;
 public class Player extends Entity{
 
     private int walkFrame = 0;
-    private boolean facingRight = true;
-    private boolean isGrounded = true;
+    private long whenAteCarrot;
     private double xAccOfGround = 0;
     private double maxXAcc = 12.5;
     private double jumpHeight = -15.0; //change this when player eats carrots
+    private boolean facingRight = true;
+    private boolean isGrounded = true;
+    private boolean ateCarrot = false;
     private BufferedImage airRightImg;
     private BufferedImage airLeftImg;
     private BufferedImage idleRightImg;
@@ -26,6 +28,7 @@ public class Player extends Entity{
 
     public Player(int width, int height, int xPos, int yPos, double xAcc, double yAcc) {
         super(width, height, xPos, yPos, xAcc, yAcc);
+        //imgs
         airRightImg = importImg("/res/player/player_air_right.png");
         airLeftImg = importImg("/res/player/player_air_left.png");
         idleRightImg = importImg("/res/player/player_idle_right.png");
@@ -44,16 +47,24 @@ public class Player extends Entity{
         return isGrounded;
     }
 
-    public double getXAccOfGround() {
-        return xAccOfGround;
+    public boolean getAteCarrot() {
+        return ateCarrot;
     }
 
     public int getWalkFrame() {
         return walkFrame;
     }
 
+    public double getXAccOfGround() {
+        return xAccOfGround;
+    }
+
     public double getJumpHeight() {
         return jumpHeight;
+    }
+
+    public long getWhenAteCarrot() {
+        return whenAteCarrot;
     }
 
     public void setFacingRight (boolean status) {
@@ -76,6 +87,15 @@ public class Player extends Entity{
         jumpHeight = height;
     }
 
+    public void setAteCarrot(boolean status){
+        ateCarrot = status;
+    }
+
+    public void setWhenAteCarrot(long time) {
+        whenAteCarrot = time;
+    }
+
+    //moves player in x Dir
     public void applyXAcc() {
         if (!isGrounded) {
             setXAccOfGround(0);
@@ -102,9 +122,10 @@ public class Player extends Entity{
         setX(getX() + (int) getXAcc()); //apply acceleration
     }
 
+    //moves player in y Dir
     public void applyYAcc() {
         setY(getY() + (int) getYAcc());
-        if (getYAcc() != GamePanel.gravity) {
+        if (getYAcc() != GamePanel.getGravity()) {
             setYAcc(getYAcc() + 0.5);
         }
     }
@@ -126,6 +147,15 @@ public class Player extends Entity{
         }
     }
 
+    //if has been 10 seconds since ate carrot, reset jump
+    public void checkCarrotRanOut() {
+        if (System.currentTimeMillis() - whenAteCarrot > 10000) {
+            ateCarrot = false;
+            setJumpHeight(getJumpHeight() + 2.5);
+        }
+    }
+
+    //draws player
     public void draw(Graphics g) {
         if (facingRight) {
             if (getGrounded() && getXAcc() == xAccOfGround){

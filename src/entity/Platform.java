@@ -1,11 +1,12 @@
 package entity;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.awt.Color;
 
 public class Platform extends Entity{
 
     private int startY;
-    private BufferedImage platImg;
+    //private BufferedImage platImg;
     private BufferedImage carrotImg;
     private Carrot carrot;
 
@@ -16,7 +17,7 @@ public class Platform extends Entity{
         if (carrot != null) {
             carrotImg = importImg("/res/item/carrot.png");
         }
-        platImg = importImg("/res/platform/" + Integer.toString(width) + "-grass.png");
+        //platImg = importImg("/res/platform/" + Integer.toString(width) + "-grass.png");
     }
 
     public int getStartY() {
@@ -31,6 +32,7 @@ public class Platform extends Entity{
         this.carrot = carrot;
     }
 
+    //moves platforms side to side
     public void applyXAcc() {
 
         if (!inBounds(getX(), getY())) {
@@ -45,7 +47,8 @@ public class Platform extends Entity{
     }
 
     public void draw(Graphics g) {
-        g.drawImage(platImg, getX(), getY(), null);
+        g.setColor(new Color(0, 0, 0));
+        g.fillRect(getX(), getY(), getWidth(), getHeight());
         if (carrot != null) {
             g.drawImage(carrotImg, (getX() + carrot.getX()), (getY() - carrot.getWidth()), null);
         }

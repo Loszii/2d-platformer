@@ -73,6 +73,7 @@ public class Entity {
         return true;
     }
 
+    //imports an image given String filepath
     public BufferedImage importImg(String filePath) {
         InputStream is = getClass().getResourceAsStream(filePath);
         try {
