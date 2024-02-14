@@ -42,10 +42,6 @@ public class Platform extends Entity{
 
     }
 
-    public void applyYAcc() {
-        setY(getY() + (int) getYAcc());
-    }
-
     public void draw(Graphics g) {
         g.setColor(new Color(0, 0, 0));
         g.fillRect(getX(), getY(), getWidth(), getHeight());

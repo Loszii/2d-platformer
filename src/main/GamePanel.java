@@ -13,9 +13,9 @@ import java.awt.Font;
 public class GamePanel extends JPanel {
 
     private static int[] platWidths = {200, 300, 400};
-    private static double score;
+    private static int score;
     private static int frameCounter = 0; //for walk animation 
-    private static final double gravity = 9.0;
+    private static final double gravity = 7.0;
     private static boolean wPressed = false;
     private static boolean sPressed = false;
     private static boolean aPressed = false;
@@ -29,7 +29,7 @@ public class GamePanel extends JPanel {
         setPanelSize();
 
         //instantiating entities
-        mainPlayer = new Player(50, 50, (Game.width - 50) / 2, Game.height - 350, 0, gravity);
+        mainPlayer = new Player(50, 50, (Game.width - 50) / 2, Game.height - 270, 0, 0);
         platforms = generatePlats();
 
         //collision object
@@ -57,12 +57,12 @@ public class GamePanel extends JPanel {
     public static void setDPressed(boolean bool) {
         dPressed = bool;
     }
-    public static void setScore(double newScore) {
+    public static void setScore(int newScore) {
         score = newScore;
     }
 
     //getters
-    public static double getScore() {
+    public static int getScore() {
         return score;
     }
     public static boolean getSPressed() {
@@ -85,7 +85,7 @@ public class GamePanel extends JPanel {
         int yCounter = Game.height - 400;
         int curWidth;
         Carrot carrot;
-        plats[0] = new Platform(2120, 300, -100, Game.height - 300, 0, 0, null); //platform under player
+        plats[0] = new Platform(2120, 220, -100, Game.height - 220, 0, 0, null); //platform under player
 
         //plat generation loop
         for (int i = 1; i < plats.length; i++) {
@@ -101,12 +101,13 @@ public class GamePanel extends JPanel {
         return plats;
     }
 
-    //moves all thngs down by screenSpeed
+    //moves all things down by screenSpeed and changes score
     public static void scrollScreen(int screenSpeed) {
         mainPlayer.setY(mainPlayer.getY() + screenSpeed);
         for (int i = 0; i < platforms.length; i++) {
             platforms[i].setY(platforms[i].getY() + screenSpeed);
         }
+        score += screenSpeed;
     }
 
     //check when to update walk frame
@@ -126,7 +127,7 @@ public class GamePanel extends JPanel {
         super.paintComponent(g); //calling original paintComponent()
 
         //background 
-        g.setColor(new Color(200, 200, 200));
+        g.setColor(new Color(200, 150, 150));
         g.fillRect(0, 0, Game.width, Game.height);
 
         //movement
@@ -157,17 +158,13 @@ public class GamePanel extends JPanel {
         mainPlayer.applyYAcc();
         for (int i = 0; i < platforms.length; i++) {
             platforms[i].applyXAcc();
-            platforms[i].applyYAcc(); //not tested yet
         }
 
         //scrolling and score
-        if (mainPlayer.getY() < Game.height / 2 && mainPlayer.getYAcc() < 0) {
-            scrollScreen(Math.abs(((int) mainPlayer.getYAcc()))); //scroll screen of |yAcc| and change score by same amount
-        } else if (mainPlayer.getY() > 3 * Game.height / 4 && mainPlayer.getYAcc() > 0){
-            scrollScreen(-1 * Math.abs(((int) mainPlayer.getYAcc())));
-        }
-        if (!mainPlayer.getGrounded()) {
-            score -=  (mainPlayer.getYAcc());
+        if (mainPlayer.getY() < Game.height / 2) {
+            scrollScreen((int) gravity); //scroll screen of |yAcc| and change score by same amount
+        } else if (mainPlayer.getY() > 3 * Game.height / 4){
+            scrollScreen((int) -gravity);
         }
 
         //drawing
@@ -175,9 +172,9 @@ public class GamePanel extends JPanel {
             platforms[i].draw(g);
         }
         mainPlayer.draw(g);
-        g.setColor(new Color(0, 0, 0));
+        g.setColor(new Color(255, 255, 255));
         g.setFont(new Font("font", 3, 50));
-        g.drawString(String.valueOf(score), Game.width /2 , 50);
+        g.drawString(String.valueOf(score / 10), Game.width /2 , 50);
         
         //change walk frame
         if (mainPlayer.getXAcc() != mainPlayer.getXAccOfGround() && checkFrameCounter()) {

@@ -16,15 +16,11 @@ public class Collision {
     public void checkCol() {
         closest = getNearestPlat();
         checkOutOfBounds();
-        if (checkPlatformBot() && (!GamePanel.getSPressed() || GamePanel.getScore() <= 10)) {
+        if (checkPlatformBot() && (!GamePanel.getSPressed() || closest.equals(platforms[0]))) { //cant go thru starting plat
             mainPlayer.setGrounded(true);
-            mainPlayer.setXAccOfGround(closest.getXAcc());
             mainPlayer.setYAcc(0);
-
-            //clicking to plat and changing score 
-            double yDiff = ((double) ((closest.getY() - mainPlayer.getHeight()) - mainPlayer.getY()));
             mainPlayer.setY(closest.getY() - mainPlayer.getHeight());
-            GamePanel.setScore(GamePanel.getScore() + yDiff);
+            mainPlayer.setXAccOfGround(closest.getXAcc());
         } else {
             mainPlayer.setGrounded(false);
         }
