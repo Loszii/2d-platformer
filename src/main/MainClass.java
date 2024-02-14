@@ -14,8 +14,6 @@ public class MainClass {
 
         carrot changes player to look different
 
-        maybe remove plat y acc, never move up or down
-
          */
         new Game();
     }

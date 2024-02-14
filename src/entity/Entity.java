@@ -67,7 +67,7 @@ public class Entity {
     public boolean inBounds(int xVal, int yVal) {
         if (xVal < 0) {
             return false;
-        } else if (xVal > Game.width - width) {
+        } else if (xVal > Game.WIDTH - width) {
             return false;
         }
         return true;

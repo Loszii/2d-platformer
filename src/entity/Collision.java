@@ -55,8 +55,8 @@ public class Collision {
 
     private void checkOutOfBounds() {
         if (mainPlayer.getX() < -50) {
-            mainPlayer.setX(Game.width + 50 - mainPlayer.getWidth());
-        } else if (mainPlayer.getX() + mainPlayer.getWidth() > Game.width + 50) {
+            mainPlayer.setX(Game.WIDTH + 50 - mainPlayer.getWidth());
+        } else if (mainPlayer.getX() + mainPlayer.getWidth() > Game.WIDTH + 50) {
             mainPlayer.setX(-50);
         }
     }

@@ -29,7 +29,7 @@ public class GamePanel extends JPanel {
         setPanelSize();
 
         //instantiating entities
-        mainPlayer = new Player(50, 50, (Game.width - 50) / 2, Game.height - 270, 0, 0);
+        mainPlayer = new Player(50, 50, (Game.WIDTH - 50) / 2, Game.HEIGHT - 270, 0, 0);
         platforms = generatePlats();
 
         //collision object
@@ -41,7 +41,7 @@ public class GamePanel extends JPanel {
 
     //setters
     private void setPanelSize() {
-        Dimension size = new Dimension(Game.width, Game.height);
+        Dimension size = new Dimension(Game.WIDTH, Game.HEIGHT);
         setPreferredSize(size);
     }
 
@@ -82,10 +82,10 @@ public class GamePanel extends JPanel {
     public static Platform[] generatePlats() {
         Platform[] plats = new Platform[1000];
         Random rand = new Random();
-        int yCounter = Game.height - 400;
+        int yCounter = Game.HEIGHT - 400;
         int curWidth;
         Carrot carrot;
-        plats[0] = new Platform(2120, 220, -100, Game.height - 220, 0, 0, null); //platform under player
+        plats[0] = new Platform(2120, 220, -100, Game.HEIGHT - 220, 0, 0, null); //platform under player
 
         //plat generation loop
         for (int i = 1; i < plats.length; i++) {
@@ -95,7 +95,7 @@ public class GamePanel extends JPanel {
             } else {
                 carrot = null;
             }
-            plats[i] = new Platform(curWidth, 10, rand.nextInt(Game.width - curWidth), yCounter, (rand.nextInt(6) + 1), 0, carrot);
+            plats[i] = new Platform(curWidth, 10, rand.nextInt(Game.WIDTH - curWidth), yCounter, (rand.nextInt(6) + 1), 0, carrot);
             yCounter -= 100 + rand.nextInt(100); //gets farther as go up
         }
         return plats;
@@ -128,7 +128,7 @@ public class GamePanel extends JPanel {
 
         //background 
         g.setColor(new Color(200, 150, 150));
-        g.fillRect(0, 0, Game.width, Game.height);
+        g.fillRect(0, 0, Game.WIDTH, Game.HEIGHT);
 
         //movement
         if (wPressed) {
@@ -161,9 +161,9 @@ public class GamePanel extends JPanel {
         }
 
         //scrolling and score
-        if (mainPlayer.getY() < Game.height / 2) {
+        if (mainPlayer.getY() < Game.HEIGHT / 2) {
             scrollScreen((int) gravity); //scroll screen of |yAcc| and change score by same amount
-        } else if (mainPlayer.getY() > 3 * Game.height / 4){
+        } else if (mainPlayer.getY() > 3 * Game.HEIGHT / 4){
             scrollScreen((int) -gravity);
         }
 
@@ -174,7 +174,7 @@ public class GamePanel extends JPanel {
         mainPlayer.draw(g);
         g.setColor(new Color(255, 255, 255));
         g.setFont(new Font("font", 3, 50));
-        g.drawString(String.valueOf(score / 10), Game.width /2 , 50);
+        g.drawString(String.valueOf(score / 10), Game.WIDTH /2 , 50);
         
         //change walk frame
         if (mainPlayer.getXAcc() != mainPlayer.getXAccOfGround() && checkFrameCounter()) {
