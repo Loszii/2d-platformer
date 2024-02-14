@@ -1,22 +1,23 @@
 package entity;
 import main.Game;
 import main.GamePanel;
+import java.util.ArrayList;
 
 public class Collision {
 
-    private Platform[] platforms;
+    private ArrayList<Platform> plats;
     private Player mainPlayer;
     private Platform closest;
 
     public Collision() {
         this.mainPlayer = GamePanel.getPlayer();
-        this.platforms = GamePanel.getPlats();
+        this.plats = GamePanel.getPlatGenerator().getPlats();
     }
 
     public void checkCol() {
         closest = getNearestPlat();
         checkOutOfBounds();
-        if (checkPlatformBot() && (!GamePanel.getSPressed() || closest.equals(platforms[0]))) { //cant go thru starting plat
+        if (checkPlatformBot() && (!GamePanel.getSPressed() || closest.equals(plats.get(0)))) { //cant go thru starting plat
             mainPlayer.setGrounded(true);
             mainPlayer.setYAcc(0);
             mainPlayer.setY(closest.getY() - mainPlayer.getHeight());
@@ -64,11 +65,11 @@ public class Collision {
     //returns plat that is closest to player in yDir
     private Platform getNearestPlat() {
         int curr;
-        Platform closest = platforms[0];
-        for (int i = 1; i < platforms.length; i++) {
-            curr = platforms[i].getY();
+        Platform closest = plats.get(0);
+        for (int i = 1; i < plats.size(); i++) {
+            curr = plats.get(i).getY();
             if (Math.abs(curr - (mainPlayer.getY() + mainPlayer.getHeight())) < Math.abs((closest.getY() - (mainPlayer.getY() + mainPlayer.getHeight())))) {
-                closest = platforms[i];
+                closest = plats.get(i);
             }
         }
         return closest;

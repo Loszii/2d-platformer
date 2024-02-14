@@ -1,5 +1,5 @@
 package main;
-import java.util.Random;
+import java.util.ArrayList;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Dimension;
@@ -7,33 +7,33 @@ import javax.swing.JPanel;
 import entity.Player;
 import entity.Platform;
 import entity.Collision;
-import entity.Carrot;
 import java.awt.Font;
 
 public class GamePanel extends JPanel {
 
-    private static int[] platWidths = {200, 300, 400};
     private static int score;
-    private static int frameCounter = 0; //for walk animation 
+    private static int frameCounter = 0; //for walk animation  // move to Player
     private static final double gravity = 7.0;
     private static boolean wPressed = false;
     private static boolean sPressed = false;
     private static boolean aPressed = false;
     private static boolean dPressed = false;
     private static Player mainPlayer;
-    private static Platform[] platforms;
+    private static PlatGenerator platGen;
+    private static ArrayList<Platform> plats; //update in add method
     private static Collision collision;
 
 
     public GamePanel(){
         setPanelSize();
 
-        //instantiating entities
+        //player
         mainPlayer = new Player(50, 50, (Game.WIDTH - 50) / 2, Game.HEIGHT - 270, 0, 0);
-        platforms = generatePlats();
-
-        //collision object
+        //other objects
+        platGen = new PlatGenerator();
         collision = new Collision();
+        plats = platGen.getPlats();
+
 
         //make keybinding actions
         new KeyBinding(this);
@@ -74,38 +74,15 @@ public class GamePanel extends JPanel {
     public static Player getPlayer() {
         return mainPlayer;
     }
-    public static Platform[] getPlats() {
-        return platforms;
-    }
-
-    //generates a bunch of random platforms in the sky
-    public static Platform[] generatePlats() {
-        Platform[] plats = new Platform[1000];
-        Random rand = new Random();
-        int yCounter = Game.HEIGHT - 400;
-        int curWidth;
-        Carrot carrot;
-        plats[0] = new Platform(2120, 220, -100, Game.HEIGHT - 220, 0, 0, null); //platform under player
-
-        //plat generation loop
-        for (int i = 1; i < plats.length; i++) {
-            curWidth = platWidths[rand.nextInt(platWidths.length)]; //gets random width
-            if (rand.nextInt(100) <= 5) { //5% chance
-                carrot = new Carrot(25, 25, rand.nextInt(curWidth - 25));
-            } else {
-                carrot = null;
-            }
-            plats[i] = new Platform(curWidth, 10, rand.nextInt(Game.WIDTH - curWidth), yCounter, (rand.nextInt(6) + 1), 0, carrot);
-            yCounter -= 100 + rand.nextInt(100); //gets farther as go up
-        }
-        return plats;
+    public static PlatGenerator getPlatGenerator() {
+        return platGen;
     }
 
     //moves all things down by screenSpeed and changes score
     public static void scrollScreen(int screenSpeed) {
         mainPlayer.setY(mainPlayer.getY() + screenSpeed);
-        for (int i = 0; i < platforms.length; i++) {
-            platforms[i].setY(platforms[i].getY() + screenSpeed);
+        for (int i = 0; i < plats.size(); i++) {
+            plats.get(i).setY(plats.get(i).getY() + screenSpeed);
         }
         score += screenSpeed;
     }
@@ -123,8 +100,11 @@ public class GamePanel extends JPanel {
 
     //MAIN GAME LOOP
     public void paintComponent(Graphics g) {
-        //g is attribute of jPanel that was inherited
-        super.paintComponent(g); //calling original paintComponent()
+
+        //generate new plats if need
+        if (plats.get(plats.size() - 1).getY() >= 0) {
+            platGen.addPlats();
+        }
 
         //background 
         g.setColor(new Color(200, 150, 150));
@@ -156,8 +136,8 @@ public class GamePanel extends JPanel {
         //movement
         mainPlayer.applyXAcc();
         mainPlayer.applyYAcc();
-        for (int i = 0; i < platforms.length; i++) {
-            platforms[i].applyXAcc();
+        for (int i = 0; i < plats.size(); i++) {
+            plats.get(i).applyXAcc();
         }
 
         //scrolling and score
@@ -168,8 +148,8 @@ public class GamePanel extends JPanel {
         }
 
         //drawing
-        for (int i = 0; i < platforms.length; i++) {
-            platforms[i].draw(g);
+        for (int i = 0; i < plats.size(); i++) {
+            plats.get(i).draw(g);
         }
         mainPlayer.draw(g);
         g.setColor(new Color(255, 255, 255));
