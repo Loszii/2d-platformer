@@ -12,7 +12,7 @@ import java.awt.Font;
 public class GamePanel extends JPanel {
 
     private static int score;
-    private static int frameCounter = 0; //for walk animation  // move to Player
+    private static int frameCounter = 0; //for walk animation  // move to Player maybe
     private static final double gravity = 7.0;
     private static boolean wPressed = false;
     private static boolean sPressed = false;
@@ -20,7 +20,7 @@ public class GamePanel extends JPanel {
     private static boolean dPressed = false;
     private static Player mainPlayer;
     private static PlatGenerator platGen;
-    private static ArrayList<Platform> plats; //update in add method
+    private static ArrayList<Platform> plats;
     private static Collision collision;
 
 
@@ -152,9 +152,13 @@ public class GamePanel extends JPanel {
             plats.get(i).draw(g);
         }
         mainPlayer.draw(g);
+        if (mainPlayer.getAteCarrot()) { //plat timer
+            g.setColor(new Color(225, 120, 35));
+            g.fillRect(mainPlayer.getX(), mainPlayer.getY() - 6, (int) (5 * (10 - (System.currentTimeMillis() - mainPlayer.getWhenAteCarrot()) / 1000)), 3);
+        }
         g.setColor(new Color(255, 255, 255));
         g.setFont(new Font("font", 3, 50));
-        g.drawString(String.valueOf(score / 10), Game.WIDTH /2 , 50);
+        g.drawString(String.valueOf(score / 10), Game.WIDTH / 2 - 25, 50); //score
         
         //change walk frame
         if (mainPlayer.getXAcc() != mainPlayer.getXAccOfGround() && checkFrameCounter()) {
