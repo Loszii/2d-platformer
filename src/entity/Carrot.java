@@ -1,9 +1,22 @@
 package entity;
+import java.awt.image.BufferedImage;
+import java.awt.Graphics;
 
 public class Carrot extends Entity {
 
-    public Carrot(int width, int height, int xPos) {
-        super(width, height, xPos);
+    private static BufferedImage carrotImg;
+
+    public Carrot(int width, int height, int xPos, int yPos) {
+        super(width, height, xPos, yPos, 0);
+        carrotImg = importImg("/res/item/carrot.png");
+    }
+
+    public static BufferedImage getCarrotImg() {
+        return carrotImg;
+    }
+
+    public void draw(Graphics g) {
+        g.drawImage(carrotImg, getX(), getY(), null);
     }
 
 }

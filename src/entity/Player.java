@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 public class Player extends Entity{
     //make all static, only one player
     private int walkFrame = 0;
+    private int animationCounter = 0;
     private long whenAteCarrot;
     private double xAccOfGround = 0;
     private double maxXAcc = 12.5;
@@ -155,6 +156,33 @@ public class Player extends Entity{
             ateCarrot = false;
             setJumpHeight(getJumpHeight() + 5.0);
         }
+    }
+
+    //check when to update walk frame
+    private boolean checkAnimationCounter() {
+        int xDiff = (int) (getXAcc() - getXAccOfGround());
+        if (xDiff > 0 && animationCounter > 17 - xDiff) {
+            return true;
+        } else if (animationCounter > 17 + xDiff) {
+            return true;
+        }
+        return false;
+    }
+
+    public void changeWalkFrame() {
+        //change walk frame
+        if (getXAcc() != getXAccOfGround() && checkAnimationCounter()) {
+            if (getWalkFrame() < 3) {
+                setWalkFrame(getWalkFrame() + 1);
+                animationCounter = 0;
+            } else {
+                setWalkFrame(0);
+            }
+        } else if (getXAcc() == getXAccOfGround()){
+            setWalkFrame(0);
+            animationCounter = 0;
+        }
+        animationCounter += 1;
     }
 
     //draws player

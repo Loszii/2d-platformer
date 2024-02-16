@@ -26,6 +26,7 @@ public class Collision {
             mainPlayer.setGrounded(false);
         }
         checkCarrot();
+        checkEnemy();
     }
 
     //collision detections
@@ -41,14 +42,24 @@ public class Collision {
     //for each platforms if has carrot, check if player inside, if so, add jump height and set hasCarrot attribute in palt to no
     public void checkCarrot() {
         if (closest.getCarrot() != null) {
-            if ((mainPlayer.getX() + mainPlayer.getWidth()) > (closest.getX() + (closest.getCarrot().getX())) && mainPlayer.getX() < (closest.getX() + (closest.getCarrot().getX() + closest.getCarrot().getWidth()))) {
-                if ((mainPlayer.getY() + mainPlayer.getHeight()) > (closest.getY() - closest.getCarrot().getHeight()) && mainPlayer.getY() < closest.getY()) {
+            if ((mainPlayer.getX() + mainPlayer.getWidth()) > (closest.getCarrot().getX()) && mainPlayer.getX() < (closest.getCarrot().getX() + closest.getCarrot().getWidth())) {
+                if ((mainPlayer.getY() + mainPlayer.getHeight()) > closest.getCarrot().getHeight() && mainPlayer.getY() < (closest.getCarrot().getY() + closest.getCarrot().getHeight())) {
                     closest.setCarrot(null);
                     if (!mainPlayer.getAteCarrot()) { //doesnt stack just increase duration
                         mainPlayer.setJumpHeight(mainPlayer.getJumpHeight() - 5.0);
                     }
                     mainPlayer.setAteCarrot(true);
                     mainPlayer.setWhenAteCarrot(System.currentTimeMillis());
+                }
+            }
+        }
+    }
+
+    public void checkEnemy() {
+        if (closest.getEnemy() != null) {
+            if ((mainPlayer.getX() + mainPlayer.getWidth()) > (closest.getEnemy().getX()) && mainPlayer.getX() < (closest.getEnemy().getX() + closest.getEnemy().getWidth())) {
+                if ((mainPlayer.getY() + mainPlayer.getHeight()) > closest.getEnemy().getHeight() && mainPlayer.getY() < (closest.getEnemy().getY() + closest.getEnemy().getHeight())) {
+                    System.out.println("hit enemy");
                 }
             }
         }

@@ -12,7 +12,6 @@ import java.awt.Font;
 public class GamePanel extends JPanel {
 
     private static int score;
-    private static int frameCounter = 0; //for walk animation  // move to Player maybe
     private static final double gravity = 7.0;
     private static boolean wPressed = false;
     private static boolean sPressed = false;
@@ -83,19 +82,13 @@ public class GamePanel extends JPanel {
         mainPlayer.setY(mainPlayer.getY() + screenSpeed);
         for (int i = 0; i < plats.size(); i++) {
             plats.get(i).setY(plats.get(i).getY() + screenSpeed);
+            if (plats.get(i).getCarrot() != null) {
+                plats.get(i).getCarrot().setY(plats.get(i).getCarrot().getY() + screenSpeed);
+            } else if (plats.get(i).getEnemy() != null) {
+                plats.get(i).getEnemy().setY(plats.get(i).getEnemy().getY() + screenSpeed);
+            }
         }
         score += screenSpeed;
-    }
-
-    //check when to update walk frame
-    public static boolean checkFrameCounter() {
-        int xDiff = (int) (mainPlayer.getXAcc() - mainPlayer.getXAccOfGround());
-        if (xDiff > 0 && frameCounter > 17 - xDiff) {
-            return true;
-        } else if (frameCounter > 17 + xDiff) {
-            return true;
-        }
-        return false;
     }
 
     //MAIN GAME LOOP
@@ -110,7 +103,7 @@ public class GamePanel extends JPanel {
         g.setColor(new Color(200, 150, 150));
         g.fillRect(0, 0, Game.WIDTH, Game.HEIGHT);
 
-        //movement
+        //keyboard inputs
         if (wPressed) {
             if (mainPlayer.getGrounded()) {
                 mainPlayer.setYAcc(mainPlayer.getJumpHeight());
@@ -133,7 +126,7 @@ public class GamePanel extends JPanel {
             mainPlayer.checkCarrotRanOut();
         }
 
-        //movement
+        //applying movement
         mainPlayer.applyXAcc();
         mainPlayer.applyYAcc();
         for (int i = 0; i < plats.size(); i++) {
@@ -142,10 +135,13 @@ public class GamePanel extends JPanel {
 
         //scrolling and score
         if (mainPlayer.getY() < Game.HEIGHT / 2) {
-            scrollScreen((int) gravity); //scroll screen of |yAcc| and change score by same amount
+            scrollScreen((int) gravity - 3); //scroll screen of |yAcc| and change score by same amount
         } else if (mainPlayer.getY() > 3 * Game.HEIGHT / 4){
             scrollScreen((int) -gravity);
         }
+
+        //animation
+        mainPlayer.changeWalkFrame();
 
         //drawing
         for (int i = 0; i < plats.size(); i++) {
@@ -160,19 +156,6 @@ public class GamePanel extends JPanel {
         g.setFont(new Font("font", 3, 50));
         g.drawString(String.valueOf(score / 10), Game.WIDTH / 2 - 25, 50); //score
         
-        //change walk frame
-        if (mainPlayer.getXAcc() != mainPlayer.getXAccOfGround() && checkFrameCounter()) {
-            if (mainPlayer.getWalkFrame() < 3) {
-                mainPlayer.setWalkFrame(mainPlayer.getWalkFrame() + 1);
-                frameCounter = 0;
-            } else {
-                mainPlayer.setWalkFrame(0);
-            }
-        } else if (mainPlayer.getXAcc() == mainPlayer.getXAccOfGround()){
-            mainPlayer.setWalkFrame(0);
-            frameCounter = 0;
-        }
-        frameCounter += 1;
     }
 
 }

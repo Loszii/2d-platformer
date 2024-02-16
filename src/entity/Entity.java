@@ -22,10 +22,12 @@ public class Entity {
         this.yAcc = yAcc;
     }
 
-    public Entity(int width, int height, int xPos) {
+    public Entity(int width, int height, int xPos, int yPos, double xAcc) {
         this.width = width;
         this.height = height;
         this.xPos = xPos;
+        this.yPos = yPos;
+        this.xAcc = xAcc;
     }
 
     //setters
