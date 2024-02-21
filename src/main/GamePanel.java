@@ -27,7 +27,7 @@ public class GamePanel extends JPanel {
         setPanelSize();
 
         //player
-        mainPlayer = new Player(50, 50, (Game.WIDTH - 50) / 2, Game.HEIGHT - 270, 0, 0);
+        mainPlayer = new Player(50, 50, (Game.WIDTH - 50) / 2, Game.HEIGHT - 270);
         //other objects
         platGen = new PlatGenerator();
         collision = new Collision();
@@ -78,17 +78,26 @@ public class GamePanel extends JPanel {
     }
 
     //moves all things down by screenSpeed and changes score
-    public static void scrollScreen(int screenSpeed) {
+    private static void scrollScreen(int screenSpeed) {
         mainPlayer.setY(mainPlayer.getY() + screenSpeed);
         for (int i = 0; i < plats.size(); i++) {
             plats.get(i).setY(plats.get(i).getY() + screenSpeed);
             if (plats.get(i).getCarrot() != null) {
                 plats.get(i).getCarrot().setY(plats.get(i).getCarrot().getY() + screenSpeed);
-            } else if (plats.get(i).getEnemy() != null) {
-                plats.get(i).getEnemy().setY(plats.get(i).getEnemy().getY() + screenSpeed);
+            } else if (plats.get(i).getSnake() != null) {
+                plats.get(i).getSnake().setY(plats.get(i).getSnake().getY() + screenSpeed);
             }
         }
         score += screenSpeed;
+    }
+
+    public static void resetGame() { //make private and have gameover screen call it
+        scrollScreen(-score);
+        mainPlayer.setX((Game.WIDTH - 50) / 2);
+        mainPlayer.setY(Game.HEIGHT - 270);
+        mainPlayer.setYAcc(0);
+        mainPlayer.setXAcc(0);
+        score = 0;
     }
 
     //MAIN GAME LOOP
@@ -100,7 +109,7 @@ public class GamePanel extends JPanel {
         }
 
         //background 
-        g.setColor(new Color(200, 150, 150));
+        g.setColor(new Color(150, 150, 150));
         g.fillRect(0, 0, Game.WIDTH, Game.HEIGHT);
 
         //keyboard inputs
@@ -142,6 +151,11 @@ public class GamePanel extends JPanel {
 
         //animation
         mainPlayer.changeWalkFrame();
+        for (int i = 0; i < plats.size(); i++) {
+            if (plats.get(i).getSnake() != null) {
+                plats.get(i).getSnake().changeWalkFrame();
+            }
+        }
 
         //drawing
         for (int i = 0; i < plats.size(); i++) {

@@ -13,13 +13,11 @@ public class Entity {
     private double xAcc;
     private double yAcc;
 
-    public Entity(int width, int height, int xPos, int yPos, double xAcc, double yAcc) {
+    public Entity(int width, int height, int xPos, int yPos) {
         this.width = width;
         this.height = height;
         this.xPos = xPos;
         this.yPos = yPos;
-        this.xAcc = xAcc;
-        this.yAcc = yAcc;
     }
 
     public Entity(int width, int height, int xPos, int yPos, double xAcc) {

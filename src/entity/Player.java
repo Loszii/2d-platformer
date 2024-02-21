@@ -27,8 +27,11 @@ public class Player extends Entity{
     private BufferedImage playerWalkL3;
     private BufferedImage playerWalkL4;
 
-    public Player(int width, int height, int xPos, int yPos, double xAcc, double yAcc) {
-        super(width, height, xPos, yPos, xAcc, yAcc);
+    public Player(int width, int height, int xPos, int yPos) {
+        super(width, height, xPos, yPos);
+        setXAcc(0);
+        setYAcc(0);
+
         //imgs
         airRightImg = importImg("/res/player/player_air_right.png");
         airLeftImg = importImg("/res/player/player_air_left.png");

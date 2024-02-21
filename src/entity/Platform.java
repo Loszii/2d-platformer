@@ -5,7 +5,7 @@ import java.awt.Color;
 public class Platform extends Entity{
 
     private Carrot carrot = null;
-    private Enemy1 enemy = null;
+    private Snake snake = null;
 
     public Platform(int width, int height, int xPos, int yPos, double xAcc) {
         super(width, height, xPos, yPos, xAcc);
@@ -15,16 +15,16 @@ public class Platform extends Entity{
         return carrot;
     }
 
-    public Enemy1 getEnemy() {
-        return enemy;
+    public Snake getSnake() {
+        return snake;
     }
 
     public void setCarrot(Carrot carrot) {
         this.carrot = carrot;
     }
 
-    public void setEnemy(Enemy1 enemy) {
-        this.enemy = enemy;
+    public void setSnake(Snake snake) {
+        this.snake = snake;
     }
 
     //moves platforms side to side
@@ -37,9 +37,9 @@ public class Platform extends Entity{
 
         if (carrot != null) {
             carrot.setX(carrot.getX() + (int) getXAcc());
-        } else if (enemy != null) {
-            enemy.setX(enemy.getX() + (int) getXAcc());
-            enemy.applyXAcc();
+        } else if (snake != null) {
+            snake.setX(snake.getX() + (int) getXAcc());
+            snake.applyXAcc();
         }
 
     }
@@ -49,8 +49,8 @@ public class Platform extends Entity{
         g.fillRect(getX(), getY(), getWidth(), getHeight());
         if (carrot != null) {
             carrot.draw(g);
-        } else if (enemy != null) {
-            enemy.draw(g);
+        } else if (snake != null) {
+            snake.draw(g);
         }
     }
 

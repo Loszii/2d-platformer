@@ -2,12 +2,12 @@ package main;
 import java.util.ArrayList;
 import java.util.Random;
 import entity.Carrot;
-import entity.Enemy1;
+import entity.Snake;
 import entity.Platform;
 
 public class PlatGenerator {
 
-    private final static int[] PLATWIDTHS = {200, 300, 400};
+    private final static int[] PLATWIDTHS = {300, 400, 500};
     private static ArrayList<Platform> plats;
     private int yCounter = Game.HEIGHT - 400;
 
@@ -43,9 +43,9 @@ public class PlatGenerator {
 
             if (rand.nextInt(100) <= 5) { //5% chance
                 plats.get(plats.size() - 1).setCarrot(new Carrot(25, 25, xPos + rand.nextInt(curWidth - 25), yCounter - 25));
-            } else if (rand.nextInt(100) <= 10) { //10% chance
-                plats.get(plats.size() - 1).setEnemy(new Enemy1(35, 35, xPos + rand.nextInt(curWidth - 35), yCounter - 35, 1 + rand.nextInt(2)));
-                plats.get(plats.size() - 1).getEnemy().setGroundPlat(plats.get(plats.size() - 1));
+            } else if (rand.nextInt(100) <= 20) { //20% chance
+                plats.get(plats.size() - 1).setSnake(new Snake(75, 20, xPos + rand.nextInt(curWidth - 75), yCounter - 20, 1 + rand.nextInt(2)));
+                plats.get(plats.size() - 1).getSnake().setGroundPlat(plats.get(plats.size() - 1));
             }
 
             yCounter -= 100 + rand.nextInt(100);

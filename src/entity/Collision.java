@@ -26,7 +26,7 @@ public class Collision {
             mainPlayer.setGrounded(false);
         }
         checkCarrot();
-        checkEnemy();
+        checkSnake();
     }
 
     //collision detections
@@ -43,7 +43,7 @@ public class Collision {
     public void checkCarrot() {
         if (closest.getCarrot() != null) {
             if ((mainPlayer.getX() + mainPlayer.getWidth()) > (closest.getCarrot().getX()) && mainPlayer.getX() < (closest.getCarrot().getX() + closest.getCarrot().getWidth())) {
-                if ((mainPlayer.getY() + mainPlayer.getHeight()) > closest.getCarrot().getHeight() && mainPlayer.getY() < (closest.getCarrot().getY() + closest.getCarrot().getHeight())) {
+                if ((mainPlayer.getY() + mainPlayer.getHeight()) > closest.getCarrot().getY() && mainPlayer.getY() < (closest.getCarrot().getY() + closest.getCarrot().getHeight())) {
                     closest.setCarrot(null);
                     if (!mainPlayer.getAteCarrot()) { //doesnt stack just increase duration
                         mainPlayer.setJumpHeight(mainPlayer.getJumpHeight() - 5.0);
@@ -55,11 +55,11 @@ public class Collision {
         }
     }
 
-    public void checkEnemy() {
-        if (closest.getEnemy() != null) {
-            if ((mainPlayer.getX() + mainPlayer.getWidth()) > (closest.getEnemy().getX()) && mainPlayer.getX() < (closest.getEnemy().getX() + closest.getEnemy().getWidth())) {
-                if ((mainPlayer.getY() + mainPlayer.getHeight()) > closest.getEnemy().getHeight() && mainPlayer.getY() < (closest.getEnemy().getY() + closest.getEnemy().getHeight())) {
-                    System.out.println("hit enemy");
+    public void checkSnake() {
+        if (closest.getSnake() != null) {
+            if ((mainPlayer.getX() + mainPlayer.getWidth()) > (closest.getSnake().getX()) && mainPlayer.getX() < (closest.getSnake().getX() + closest.getSnake().getWidth())) {
+                if ((mainPlayer.getY() + mainPlayer.getHeight()) > closest.getSnake().getY() && mainPlayer.getY() < (closest.getSnake().getY() + closest.getSnake().getHeight())) {
+                    GamePanel.resetGame();
                 }
             }
         }

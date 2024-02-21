@@ -4,7 +4,8 @@ public class MainClass {
 
     public static void main(String[] args) {
         /*todo:
-        add enemies, game over/restart
+        game over screen
+        remove getters and setters accessing values inside own class 
          */
         new Game();
     }
