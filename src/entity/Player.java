@@ -4,16 +4,16 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
 public class Player extends Entity{
-    //make all static, only one player
-    private int walkFrame = 0;
-    private int animationCounter = 0;
-    private long whenAteCarrot;
-    private double xAccOfGround = 0;
-    private double maxXAcc = 12.5;
-    private double jumpHeight = -15.0;
-    private boolean facingRight = true;
-    private boolean isGrounded = true;
-    private boolean ateCarrot = false;
+    
+    final double maxXAcc = 12.5;
+    int walkFrame = 0;
+    int animationCounter = 0;
+    long whenAteCarrot;
+    double xAccOfGround = 0;
+    double jumpHeight = -15.0;
+    boolean facingRight = true;
+    boolean isGrounded = true;
+    boolean ateCarrot = false;
     private BufferedImage airRightImg;
     private BufferedImage airLeftImg;
     private BufferedImage idleRightImg;
@@ -27,12 +27,15 @@ public class Player extends Entity{
     private BufferedImage playerWalkL3;
     private BufferedImage playerWalkL4;
 
-    public Player(int width, int height, int xPos, int yPos) {
-        super(width, height, xPos, yPos);
-        setXAcc(0);
-        setYAcc(0);
+    public Player(int width, int height, int x, int y) {
+        super(width, height, x, y);
+        xAcc = 0;
+        yAcc = 0;
 
-        //imgs
+        importFrames();
+    }
+
+    private void importFrames() {
         airRightImg = importImg("/res/player/player_air_right.png");
         airLeftImg = importImg("/res/player/player_air_left.png");
         idleRightImg = importImg("/res/player/player_idle_right.png");
@@ -50,23 +53,15 @@ public class Player extends Entity{
     public boolean getGrounded() {
         return isGrounded;
     }
-
     public boolean getAteCarrot() {
         return ateCarrot;
     }
-
     public int getWalkFrame() {
         return walkFrame;
     }
-
-    public double getXAccOfGround() {
-        return xAccOfGround;
-    }
-
     public double getJumpHeight() {
         return jumpHeight;
     }
-
     public long getWhenAteCarrot() {
         return whenAteCarrot;
     }
@@ -74,78 +69,66 @@ public class Player extends Entity{
     public void setFacingRight (boolean status) {
         facingRight = status;
     }
-
-    public void setGrounded(boolean isGrounded) {
-        this.isGrounded = isGrounded;
-    }
-
-    public void setXAccOfGround(double acc) {
-        xAccOfGround = acc;
-    }
-
     public void setWalkFrame(int frame) {
         walkFrame = frame;
     }
-
-    public void setJumpHeight(double height) {
-        jumpHeight = height;
-    }
-
-    public void setAteCarrot(boolean status){
+    public void setAteCarrot(boolean status) {
+        boolean pastStatus = ateCarrot;
         ateCarrot = status;
-    }
-
-    public void setWhenAteCarrot(long time) {
-        whenAteCarrot = time;
+        if (status) {
+            whenAteCarrot = System.currentTimeMillis();
+        } else if (pastStatus){
+            jumpHeight += 5.0;
+        }
     }
 
     //moves player in x Dir
     public void applyXAcc() {
         if (!isGrounded) {
-            setXAccOfGround(0);
+            xAccOfGround = 0;
         }
-        if (getXAcc() != xAccOfGround) { //friction applied below
+        if (xAcc != xAccOfGround) { //friction applied below
             //this removes flickering back and forth when reducing acceleration to norm
-            if (getXAcc() - xAccOfGround >= 1) {
+            if (xAcc - xAccOfGround >= 1) {
                 if (isGrounded) {
-                    setXAcc(getXAcc() - 0.75); //ground has more friction
+                    xAcc -= 0.75;
                 } else {
-                    setXAcc(getXAcc() - 0.7);
+                    xAcc -= 0.7;
                 }
-            } else if (getXAcc() - xAccOfGround <= -1) {
+            } else if (xAcc - xAccOfGround <= -1) {
                 if (isGrounded) {
-                    setXAcc(getXAcc() + 0.75);
+                    xAcc += 0.75;
                 } else {
-                    setXAcc(getXAcc() + 0.7);
+                    xAcc += 0.7;
                 }
             } else {
-                setXAcc(xAccOfGround);
+                xAcc = xAccOfGround;
             }
         }
 
-        setX(getX() + (int) getXAcc()); //apply acceleration
+        x += (int) xAcc; //apply acceleration
     }
 
     //moves player in y Dir
     public void applyYAcc() {
-        if (!getGrounded()) {
-            setY(getY() + (int) getYAcc());
-            if ((getYAcc() != GamePanel.getGravity())) {
-                setYAcc(getYAcc() + 0.5);
+        if (!isGrounded) {
+            y += (int) yAcc;
+            if ((yAcc != GamePanel.gravity)) {
+                yAcc += 0.5;
             }
         }
     }
 
     //returns if players acc is within xAccOfGround +/- maxXAcc
     public boolean isWithinSpeed() {
-        if (getXAcc() >= 0) {
-            if (getXAcc() > xAccOfGround + maxXAcc) {
+        if (xAcc >= 0) {
+            if (xAcc > xAccOfGround + maxXAcc) {
                 return false;
             } else {
                 return true;
             }
         } else {
-            if (getXAcc() < xAccOfGround - maxXAcc) {
+            if (xAcc < xAccOfGround - maxXAcc) {
                 return false;
             } else {
                 return true;
@@ -157,14 +140,14 @@ public class Player extends Entity{
     public void checkCarrotRanOut() {
         if (System.currentTimeMillis() - whenAteCarrot > 10000) {
             ateCarrot = false;
-            setJumpHeight(getJumpHeight() + 5.0);
+            jumpHeight += 5.0;
         }
     }
 
     //check when to update walk frame
     private boolean checkAnimationCounter() {
-        int xDiff = (int) (getXAcc() - getXAccOfGround());
-        if (xDiff > 0 && animationCounter > 17 - xDiff) {
+        int xDiff = (int) (xAcc - xAccOfGround);
+        if ((xDiff > 0) && (animationCounter > 17 - xDiff)) {
             return true;
         } else if (animationCounter > 17 + xDiff) {
             return true;
@@ -174,15 +157,15 @@ public class Player extends Entity{
 
     public void changeWalkFrame() {
         //change walk frame
-        if (getXAcc() != getXAccOfGround() && checkAnimationCounter()) {
-            if (getWalkFrame() < 3) {
-                setWalkFrame(getWalkFrame() + 1);
+        if (xAcc != xAccOfGround && checkAnimationCounter()) {
+            if (walkFrame < 3) {
+                walkFrame += 1;
                 animationCounter = 0;
             } else {
-                setWalkFrame(0);
+                walkFrame = 0;
             }
-        } else if (getXAcc() == getXAccOfGround()){
-            setWalkFrame(0);
+        } else if (xAcc == xAccOfGround){
+            walkFrame = 0;
             animationCounter = 0;
         }
         animationCounter += 1;
@@ -191,32 +174,32 @@ public class Player extends Entity{
     //draws player
     public void draw(Graphics g) {
         if (facingRight) {
-            if (getGrounded() && getXAcc() == xAccOfGround){
-                g.drawImage(idleRightImg, getX(), getY(), null);
-            } else if (!getGrounded()){
-                g.drawImage(airRightImg, getX(), getY(), null);
+            if (isGrounded && xAcc == xAccOfGround){
+                g.drawImage(idleRightImg, x, y, null);
+            } else if (!isGrounded){
+                g.drawImage(airRightImg, x, y, null);
             } else if (walkFrame == 0) {
-                g.drawImage(playerWalkR1, getX(), getY(), null);
+                g.drawImage(playerWalkR1, x, y, null);
             } else if (walkFrame == 1) {
-                g.drawImage(playerWalkR2, getX(), getY(), null);
+                g.drawImage(playerWalkR2, x, y, null);
             } else if (walkFrame == 2) {
-                g.drawImage(playerWalkR3, getX(), getY(), null);
+                g.drawImage(playerWalkR3, x, y, null);
             } else if (walkFrame == 3) {
-                g.drawImage(playerWalkR4, getX(), getY(), null);
+                g.drawImage(playerWalkR4, x, y, null);
             }
         } else if (!facingRight) {
-            if (getGrounded() && getXAcc() == getXAccOfGround()){
-                g.drawImage(idleLeftImg, getX(), getY(), null);
-            } else if (!getGrounded()){
-                g.drawImage(airLeftImg, getX(), getY(), null);
+            if (isGrounded && xAcc == xAccOfGround){
+                g.drawImage(idleLeftImg, x, y, null);
+            } else if (!isGrounded){
+                g.drawImage(airLeftImg, x, y, null);
             } else if (walkFrame == 0) {
-                g.drawImage(playerWalkL1, getX(), getY(), null);
+                g.drawImage(playerWalkL1, x, y, null);
             } else if (walkFrame == 1) {
-                g.drawImage(playerWalkL2, getX(), getY(), null);
+                g.drawImage(playerWalkL2, x, y, null);
             } else if (walkFrame == 2) {
-                g.drawImage(playerWalkL3, getX(), getY(), null);
+                g.drawImage(playerWalkL3, x, y, null);
             } else if (walkFrame == 3) {
-                g.drawImage(playerWalkL4, getX(), getY(), null);
+                g.drawImage(playerWalkL4, x, y, null);
             }
         }
     }

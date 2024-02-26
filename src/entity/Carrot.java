@@ -6,8 +6,8 @@ public class Carrot extends Entity {
 
     private static BufferedImage carrotImg;
 
-    public Carrot(int width, int height, int xPos, int yPos) {
-        super(width, height, xPos, yPos, 0);
+    public Carrot(int width, int height, int x, int y) {
+        super(width, height, x, y, 0);
         carrotImg = importImg("/res/item/carrot.png");
     }
 
@@ -16,7 +16,7 @@ public class Carrot extends Entity {
     }
 
     public void draw(Graphics g) {
-        g.drawImage(carrotImg, getX(), getY(), null);
+        g.drawImage(carrotImg, x, y, null);
     }
 
 }

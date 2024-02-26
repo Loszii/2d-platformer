@@ -6,34 +6,34 @@ import java.io.InputStream;
 import javax.imageio.ImageIO;
 
 public class Entity {
-    private int width;
-    private int height;
-    private int xPos;
-    private int yPos;
-    private double xAcc;
-    private double yAcc;
+    int width;
+    int height;
+    int x;
+    int y;
+    double xAcc;
+    double yAcc;
 
-    public Entity(int width, int height, int xPos, int yPos) {
+    public Entity(int width, int height, int x, int y) {
         this.width = width;
         this.height = height;
-        this.xPos = xPos;
-        this.yPos = yPos;
+        this.x = x;
+        this.y = y;
     }
 
-    public Entity(int width, int height, int xPos, int yPos, double xAcc) {
+    public Entity(int width, int height, int x, int y, double xAcc) {
         this.width = width;
         this.height = height;
-        this.xPos = xPos;
-        this.yPos = yPos;
+        this.x = x;
+        this.y = y;
         this.xAcc = xAcc;
     }
 
     //setters
     public void setX(int value) {
-        xPos = value;
+        x = value;
     }
     public void setY(int value) {
-        yPos = value;
+        y = value;
     }
     public void setYAcc(double value) {
         yAcc = value;
@@ -44,23 +44,16 @@ public class Entity {
 
     //getters
     public int getX() {
-        return xPos;
+        return x;
     }
     public int getY() {
-        return yPos;
+        return y;
     }
     public double getYAcc() {
         return yAcc;
     }
     public double getXAcc() {
         return xAcc;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-    public int getHeight() {
-        return height;
     }
 
     //takes in position values and checks if they are in bounds

@@ -10,6 +10,7 @@ public class KeyBinding {
 
     private GamePanel gamePanel;
     private Action exitAction;
+    private Action enterAction;
     private Action upAction;
     private Action upActionRelease;
     private Action downAction;
@@ -24,6 +25,7 @@ public class KeyBinding {
 
         //keybindings
         exitAction = new exitAction();
+        enterAction = new EnterAction();
         upAction = new UpAction();
         upActionRelease = new UpActionRelease();
         downAction = new DownAction();
@@ -44,44 +46,51 @@ public class KeyBinding {
             System.exit(0);
         }
     }
+    public class EnterAction extends AbstractAction {
+        public void actionPerformed(ActionEvent e) {
+            if (GamePanel.gameOver) {
+                GamePanel.gameOver = false;
+            }
+        }
+    }
     public class UpAction extends AbstractAction {
         public void actionPerformed(ActionEvent e) {
-            GamePanel.setWPressed(true);
+            GamePanel.wPressed = true;
         }
     }
     public class UpActionRelease extends AbstractAction {
         public void actionPerformed(ActionEvent e) {
-            GamePanel.setWPressed(false);
+            GamePanel.wPressed = false;
         }
     }
     public class DownAction extends AbstractAction {
         public void actionPerformed(ActionEvent e) {
-            GamePanel.setSPressed(true);
+            GamePanel.sPressed = true;
         }
     }
     public class DownActionRelease extends AbstractAction {
         public void actionPerformed(ActionEvent e) {
-            GamePanel.setSPressed(false);
+            GamePanel.sPressed = false;
         }
     }
     public class LeftAction extends AbstractAction {
         public void actionPerformed(ActionEvent e) {
-            GamePanel.setAPressed(true);
+            GamePanel.aPressed = true;
         }
     }
     public class LeftActionRelease extends AbstractAction {
         public void actionPerformed(ActionEvent e) {
-            GamePanel.setAPressed(false);
+            GamePanel.aPressed = false;
         }
     }
     public class RightAction extends AbstractAction {
         public void actionPerformed(ActionEvent e) {
-            GamePanel.setDPressed(true);
+            GamePanel.dPressed = true;
         }
     }
     public class RightActionRelease extends AbstractAction {
         public void actionPerformed(ActionEvent e) {
-            GamePanel.setDPressed(false);
+            GamePanel.dPressed = false;
         }
     }
 
@@ -89,6 +98,8 @@ public class KeyBinding {
     public void setInputMap() {
         //esc
         gamePanel.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0, true), "exit");//true is onRelease
+        //enter
+        gamePanel.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, true), "startOver");
         //space
         gamePanel.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0, false), "up");
         gamePanel.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0, true), "upRelease");
@@ -116,6 +127,8 @@ public class KeyBinding {
     public void setActionMap() {
         //exit
         gamePanel.getActionMap().put("exit", exitAction);
+        //enter
+        gamePanel.getActionMap().put("startOver", enterAction);
         //movement
         gamePanel.getActionMap().put("up", upAction);
         gamePanel.getActionMap().put("upRelease", upActionRelease);

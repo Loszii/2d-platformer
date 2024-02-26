@@ -5,25 +5,25 @@ import java.util.ArrayList;
 
 public class Collision {
 
-    private ArrayList<Platform> plats;
-    private Player mainPlayer;
+    static ArrayList<Platform> plats;
+    static Player mainPlayer;
     private Platform closest;
 
     public Collision() {
-        this.mainPlayer = GamePanel.getPlayer();
-        this.plats = GamePanel.getPlatGenerator().getPlats();
+        mainPlayer = GamePanel.getPlayer();
+        plats = GamePanel.getPlatGenerator().getPlats();
     }
 
     public void checkCol() {
         closest = getNearestPlat();
         checkOutOfBounds();
         if (checkPlatformBot() && (!GamePanel.getSPressed() || closest.equals(plats.get(0)))) { //cant go thru starting plat
-            mainPlayer.setGrounded(true);
-            mainPlayer.setYAcc(0);
-            mainPlayer.setY(closest.getY() - mainPlayer.getHeight());
-            mainPlayer.setXAccOfGround(closest.getXAcc());
+            mainPlayer.isGrounded = true;
+            mainPlayer.yAcc = 0;
+            mainPlayer.y = closest.y - mainPlayer.height;
+            mainPlayer.xAccOfGround = closest.xAcc;
         } else {
-            mainPlayer.setGrounded(false);
+            mainPlayer.isGrounded = false;
         }
         checkCarrot();
         checkSnake();
@@ -31,8 +31,8 @@ public class Collision {
 
     //collision detections
     private boolean checkPlatformBot() {
-        if ((mainPlayer.getX() + mainPlayer.getWidth()) > closest.getX() && mainPlayer.getX() < closest.getX() + closest.getWidth()) {
-            if (mainPlayer.getY() + mainPlayer.getHeight() <= closest.getY() && (mainPlayer.getY() + mainPlayer.getHeight() + mainPlayer.getYAcc() >= closest.getY())) {
+        if ((mainPlayer.x + mainPlayer.width) > closest.x && mainPlayer.x < closest.x + closest.width) {
+            if (mainPlayer.y + mainPlayer.height <= closest.y && (mainPlayer.y + mainPlayer.height + mainPlayer.yAcc >= closest.y)) {
                 return true;
             }
         }
@@ -41,35 +41,34 @@ public class Collision {
 
     //for each platforms if has carrot, check if player inside, if so, add jump height and set hasCarrot attribute in palt to no
     public void checkCarrot() {
-        if (closest.getCarrot() != null) {
-            if ((mainPlayer.getX() + mainPlayer.getWidth()) > (closest.getCarrot().getX()) && mainPlayer.getX() < (closest.getCarrot().getX() + closest.getCarrot().getWidth())) {
-                if ((mainPlayer.getY() + mainPlayer.getHeight()) > closest.getCarrot().getY() && mainPlayer.getY() < (closest.getCarrot().getY() + closest.getCarrot().getHeight())) {
-                    closest.setCarrot(null);
-                    if (!mainPlayer.getAteCarrot()) { //doesnt stack just increase duration
-                        mainPlayer.setJumpHeight(mainPlayer.getJumpHeight() - 5.0);
+        if (closest.carrot != null) {
+            if ((mainPlayer.x + mainPlayer.width) > (closest.carrot.x) && mainPlayer.x < (closest.carrot.x + closest.carrot.width)) {
+                if ((mainPlayer.y + mainPlayer.height) > closest.carrot.y && mainPlayer.y < (closest.carrot.y + closest.carrot.height)) {
+                    closest.carrot = null;
+                    if (!mainPlayer.ateCarrot) { //doesnt stack just increase duration
+                        mainPlayer.jumpHeight -= 5.0;
                     }
                     mainPlayer.setAteCarrot(true);
-                    mainPlayer.setWhenAteCarrot(System.currentTimeMillis());
                 }
             }
         }
     }
 
     public void checkSnake() {
-        if (closest.getSnake() != null) {
-            if ((mainPlayer.getX() + mainPlayer.getWidth()) > (closest.getSnake().getX()) && mainPlayer.getX() < (closest.getSnake().getX() + closest.getSnake().getWidth())) {
-                if ((mainPlayer.getY() + mainPlayer.getHeight()) > closest.getSnake().getY() && mainPlayer.getY() < (closest.getSnake().getY() + closest.getSnake().getHeight())) {
-                    GamePanel.resetGame();
+        if (closest.snake != null) {
+            if ((mainPlayer.x + mainPlayer.width) > (closest.snake.x) && mainPlayer.x < (closest.snake.x + closest.snake.width)) {
+                if ((mainPlayer.y + mainPlayer.height) > closest.snake.y && mainPlayer.y < (closest.snake.y + closest.snake.height)) {
+                    GamePanel.setGameOver(true);
                 }
             }
         }
     }
 
     private void checkOutOfBounds() {
-        if (mainPlayer.getX() < -50) {
-            mainPlayer.setX(Game.WIDTH + 50 - mainPlayer.getWidth());
-        } else if (mainPlayer.getX() + mainPlayer.getWidth() > Game.WIDTH + 50) {
-            mainPlayer.setX(-50);
+        if (mainPlayer.x < -50) {
+            mainPlayer.x = Game.WIDTH + 50 - mainPlayer.width;
+        } else if (mainPlayer.x + mainPlayer.width > Game.WIDTH + 50) {
+            mainPlayer.x = -50;
         }
     }
 
@@ -78,8 +77,8 @@ public class Collision {
         int curr;
         Platform closest = plats.get(0);
         for (int i = 1; i < plats.size(); i++) {
-            curr = plats.get(i).getY();
-            if (Math.abs(curr - (mainPlayer.getY() + mainPlayer.getHeight())) < Math.abs((closest.getY() - (mainPlayer.getY() + mainPlayer.getHeight())))) {
+            curr = plats.get(i).y;
+            if (Math.abs(curr - (mainPlayer.y + mainPlayer.height)) < Math.abs((closest.y - (mainPlayer.y + mainPlayer.height)))) {
                 closest = plats.get(i);
             }
         }

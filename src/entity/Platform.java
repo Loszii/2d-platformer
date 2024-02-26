@@ -4,11 +4,11 @@ import java.awt.Color;
 
 public class Platform extends Entity{
 
-    private Carrot carrot = null;
-    private Snake snake = null;
+    Carrot carrot = null;
+    Snake snake = null;
 
-    public Platform(int width, int height, int xPos, int yPos, double xAcc) {
-        super(width, height, xPos, yPos, xAcc);
+    public Platform(int width, int height, int x, int y, double xAcc) {
+        super(width, height, x, y, xAcc);
     }
 
     public Carrot getCarrot() {
@@ -19,26 +19,18 @@ public class Platform extends Entity{
         return snake;
     }
 
-    public void setCarrot(Carrot carrot) {
-        this.carrot = carrot;
-    }
-
-    public void setSnake(Snake snake) {
-        this.snake = snake;
-    }
-
     //moves platforms side to side
     public void applyXAcc() {
 
-        if (!inBounds(getX(), getY())) {
-            setXAcc(getXAcc() * -1);;
+        if (!inBounds(x, y)) {
+            xAcc *= -1;
         }
-        setX(getX() + (int) getXAcc());
+        x += (int) xAcc;
 
         if (carrot != null) {
-            carrot.setX(carrot.getX() + (int) getXAcc());
+            carrot.x += (int) xAcc;
         } else if (snake != null) {
-            snake.setX(snake.getX() + (int) getXAcc());
+            snake.x += (int) xAcc;
             snake.applyXAcc();
         }
 
@@ -46,7 +38,7 @@ public class Platform extends Entity{
 
     public void draw(Graphics g) {
         g.setColor(new Color(0, 0, 0));
-        g.fillRect(getX(), getY(), getWidth(), getHeight());
+        g.fillRect(x, y, width, height);
         if (carrot != null) {
             carrot.draw(g);
         } else if (snake != null) {
