@@ -19,9 +19,9 @@ public class Collision {
         checkOutOfBounds();
         if (checkPlatformBot() && (!GamePanel.getSPressed() || closest.equals(plats.get(0)))) { //cant go thru starting plat
             mainPlayer.isGrounded = true;
-            mainPlayer.yAcc = 0;
+            mainPlayer.yVel = 0;
             mainPlayer.y = closest.y - mainPlayer.height;
-            mainPlayer.xAccOfGround = closest.xAcc;
+            mainPlayer.xVelOfGround = closest.xVel;
         } else {
             mainPlayer.isGrounded = false;
         }
@@ -32,7 +32,7 @@ public class Collision {
     //collision detections
     private boolean checkPlatformBot() {
         if ((mainPlayer.x + mainPlayer.width) > closest.x && mainPlayer.x < closest.x + closest.width) {
-            if (mainPlayer.y + mainPlayer.height <= closest.y && (mainPlayer.y + mainPlayer.height + mainPlayer.yAcc >= closest.y)) {
+            if (mainPlayer.y + mainPlayer.height <= closest.y && (mainPlayer.y + mainPlayer.height + mainPlayer.yVel >= closest.y)) {
                 return true;
             }
         }

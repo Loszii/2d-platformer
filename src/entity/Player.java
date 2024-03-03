@@ -5,11 +5,13 @@ import java.awt.image.BufferedImage;
 
 public class Player extends Entity{
     
-    final double maxXAcc = 12.5;
+    final double maxXVel = 12.5;
+    final double maxFallSpeed = 7.0;
+    final double xAcc = 1.0;
     int walkFrame = 0;
     int animationCounter = 0;
     long whenAteCarrot;
-    double xAccOfGround = 0;
+    double xVelOfGround = 0;
     double jumpHeight = -15.0;
     boolean facingRight = true;
     boolean isGrounded = true;
@@ -29,8 +31,8 @@ public class Player extends Entity{
 
     public Player(int width, int height, int x, int y) {
         super(width, height, x, y);
-        xAcc = 0;
-        yAcc = 0;
+        xVel = 0;
+        yVel = 0;
 
         importFrames();
     }
@@ -65,6 +67,12 @@ public class Player extends Entity{
     public long getWhenAteCarrot() {
         return whenAteCarrot;
     }
+    public double getMaxFallSpeed() {
+        return maxFallSpeed;
+    }
+    public double getXAcc() {
+        return xAcc;
+    }
 
     public void setFacingRight (boolean status) {
         facingRight = status;
@@ -83,52 +91,52 @@ public class Player extends Entity{
     }
 
     //moves player in x Dir
-    public void applyXAcc() {
+    public void applyXVel() {
         if (!isGrounded) {
-            xAccOfGround = 0;
+            xVelOfGround = 0;
         }
-        if (xAcc != xAccOfGround) { //friction applied below
+        if (xVel != xVelOfGround) { //friction applied below
             //this removes flickering back and forth when reducing acceleration to norm
-            if (xAcc - xAccOfGround >= 1) {
+            if (xVel - xVelOfGround >= 1) {
                 if (isGrounded) {
-                    xAcc -= 0.75;
+                    xVel -= GamePanel.friction;
                 } else {
-                    xAcc -= 0.7;
+                    xVel -= GamePanel.airFriction;
                 }
-            } else if (xAcc - xAccOfGround <= -1) {
+            } else if (xVel - xVelOfGround <= -1) {
                 if (isGrounded) {
-                    xAcc += 0.75;
+                    xVel += GamePanel.friction;
                 } else {
-                    xAcc += 0.7;
+                    xVel += GamePanel.airFriction;
                 }
             } else {
-                xAcc = xAccOfGround;
+                xVel = xVelOfGround;
             }
         }
 
-        x += (int) xAcc; //apply acceleration
+        x += (int) xVel; //move character
     }
 
     //moves player in y Dir
-    public void applyYAcc() {
+    public void applyYVel() {
         if (!isGrounded) {
-            y += (int) yAcc;
-            if ((yAcc != GamePanel.gravity)) {
-                yAcc += 0.5;
+            if (yVel != maxFallSpeed) {
+                yVel += GamePanel.gravity;
             }
+            y += (int) yVel;
         }
     }
 
-    //returns if players acc is within xAccOfGround +/- maxXAcc
+    //returns if players acc is within xVelOfGround +/- maxxVel
     public boolean isWithinSpeed() {
-        if (xAcc >= 0) {
-            if (xAcc > xAccOfGround + maxXAcc) {
+        if (xVel >= 0) {
+            if (xVel > xVelOfGround + maxXVel) {
                 return false;
             } else {
                 return true;
             }
         } else {
-            if (xAcc < xAccOfGround - maxXAcc) {
+            if (xVel < xVelOfGround - maxXVel) {
                 return false;
             } else {
                 return true;
@@ -146,7 +154,7 @@ public class Player extends Entity{
 
     //check when to update walk frame
     private boolean checkAnimationCounter() {
-        int xDiff = (int) (xAcc - xAccOfGround);
+        int xDiff = (int) (xVel - xVelOfGround);
         if ((xDiff > 0) && (animationCounter > 17 - xDiff)) {
             return true;
         } else if (animationCounter > 17 + xDiff) {
@@ -157,14 +165,14 @@ public class Player extends Entity{
 
     public void changeWalkFrame() {
         //change walk frame
-        if (xAcc != xAccOfGround && checkAnimationCounter()) {
+        if (xVel != xVelOfGround && checkAnimationCounter()) {
             if (walkFrame < 3) {
                 walkFrame += 1;
                 animationCounter = 0;
             } else {
                 walkFrame = 0;
             }
-        } else if (xAcc == xAccOfGround){
+        } else if (xVel == xVelOfGround){
             walkFrame = 0;
             animationCounter = 0;
         }
@@ -174,7 +182,7 @@ public class Player extends Entity{
     //draws player
     public void draw(Graphics g) {
         if (facingRight) {
-            if (isGrounded && xAcc == xAccOfGround){
+            if (isGrounded && xVel == xVelOfGround){
                 g.drawImage(idleRightImg, x, y, null);
             } else if (!isGrounded){
                 g.drawImage(airRightImg, x, y, null);
@@ -188,7 +196,7 @@ public class Player extends Entity{
                 g.drawImage(playerWalkR4, x, y, null);
             }
         } else if (!facingRight) {
-            if (isGrounded && xAcc == xAccOfGround){
+            if (isGrounded && xVel == xVelOfGround){
                 g.drawImage(idleLeftImg, x, y, null);
             } else if (!isGrounded){
                 g.drawImage(airLeftImg, x, y, null);

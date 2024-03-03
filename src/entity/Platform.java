@@ -7,8 +7,8 @@ public class Platform extends Entity{
     Carrot carrot = null;
     Snake snake = null;
 
-    public Platform(int width, int height, int x, int y, double xAcc) {
-        super(width, height, x, y, xAcc);
+    public Platform(int width, int height, int x, int y, double xVel) {
+        super(width, height, x, y, xVel);
     }
 
     public Carrot getCarrot() {
@@ -20,18 +20,18 @@ public class Platform extends Entity{
     }
 
     //moves platforms side to side
-    public void applyXAcc() {
+    public void applyXVel() {
 
-        if (!inBounds(x, y)) {
-            xAcc *= -1;
+        if (!inBounds()) {
+            xVel *= -1;
         }
-        x += (int) xAcc;
+        x += (int) xVel;
 
         if (carrot != null) {
-            carrot.x += (int) xAcc;
+            carrot.x += (int) xVel;
         } else if (snake != null) {
-            snake.x += (int) xAcc;
-            snake.applyXAcc();
+            snake.x += (int) xVel;
+            snake.applyXVel();
         }
 
     }

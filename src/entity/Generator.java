@@ -34,7 +34,7 @@ public class Generator {
         Random rand = new Random();
         int curWidth;
         int xPos;
-        double xAcc;
+        double xVel;
 
         while (true) {
             if (yCounter <= -Game.HEIGHT) {
@@ -42,9 +42,9 @@ public class Generator {
             }
             curWidth = PLATWIDTHS[rand.nextInt(PLATWIDTHS.length)]; //gets random width
             xPos = rand.nextInt(Game.WIDTH - curWidth);
-            xAcc = (rand.nextInt(6) + 1);
+            xVel = (rand.nextInt(6) + 1);
 
-            plats.add(new Platform(curWidth, 10, xPos, yCounter, xAcc));
+            plats.add(new Platform(curWidth, 10, xPos, yCounter, xVel));
 
             if (rand.nextInt(100) <= 5) { //5% chance
                 plats.get(plats.size() - 1).carrot = new Carrot(25, 25, xPos + rand.nextInt(curWidth - 25), yCounter - 25);

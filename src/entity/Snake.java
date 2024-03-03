@@ -14,9 +14,9 @@ public class Snake extends Entity {
     private BufferedImage snakeWalkL1;
     private BufferedImage snakeWalkL2;
 
-    public Snake(int width, int height, int x, int y, double xAcc) {
-        super(width, height, x, y, xAcc);
-        animationSpeed = (int) (25 - (5 * xAcc));
+    public Snake(int width, int height, int x, int y, double xVel) {
+        super(width, height, x, y, xVel);
+        animationSpeed = (int) (25 - (5 * xVel));
 
         importFrames();
     }
@@ -28,17 +28,17 @@ public class Snake extends Entity {
         snakeWalkL2 = importImg("/res/snake/snake_walk2_left.png");
     }
 
-    public void applyXAcc() {
+    public void applyXVel() {
         checkEdge();
-        x += (int) xAcc;
+        x += (int) xVel;
     }
 
     private void checkEdge() {
         if (x + width >= groundPlat.x + groundPlat.width) {
-            xAcc *= -1;
+            xVel *= -1;
             facingRight = !facingRight;
         } else if (x <= groundPlat.x) {
-            xAcc *= -1;
+            xVel *= -1;
             facingRight = !facingRight;
         }
     }

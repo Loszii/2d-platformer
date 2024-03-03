@@ -4,7 +4,7 @@ public class MainClass {
 
     public static void main(String[] args) {
         /*todo:
-        game over screen
+        3 bars of health
          */
         new Game();
     }

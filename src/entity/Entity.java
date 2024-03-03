@@ -10,8 +10,8 @@ public class Entity {
     int height;
     int x;
     int y;
-    double xAcc;
-    double yAcc;
+    double xVel;
+    double yVel;
 
     public Entity(int width, int height, int x, int y) {
         this.width = width;
@@ -20,12 +20,12 @@ public class Entity {
         this.y = y;
     }
 
-    public Entity(int width, int height, int x, int y, double xAcc) {
+    public Entity(int width, int height, int x, int y, double xVel) {
         this.width = width;
         this.height = height;
         this.x = x;
         this.y = y;
-        this.xAcc = xAcc;
+        this.xVel = xVel;
     }
 
     //setters
@@ -35,11 +35,11 @@ public class Entity {
     public void setY(int value) {
         y = value;
     }
-    public void setYAcc(double value) {
-        yAcc = value;
+    public void setYVel(double value) {
+        yVel = value;
     }
-    public void setXAcc(double value) {
-        xAcc = value;
+    public void setXVel(double value) {
+        xVel = value;
     }
 
     //getters
@@ -49,18 +49,18 @@ public class Entity {
     public int getY() {
         return y;
     }
-    public double getYAcc() {
-        return yAcc;
+    public double getYVel() {
+        return yVel;
     }
-    public double getXAcc() {
-        return xAcc;
+    public double getXVel() {
+        return xVel;
     }
 
     //takes in position values and checks if they are in bounds
-    public boolean inBounds(int xVal, int yVal) {
-        if (xVal < 0) {
+    public boolean inBounds() {
+        if (x < 0) {
             return false;
-        } else if (xVal > Game.WIDTH - width) {
+        } else if (x > Game.WIDTH - width) {
             return false;
         }
         return true;

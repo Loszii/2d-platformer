@@ -12,7 +12,9 @@ import java.awt.Font;
 
 public class GamePanel extends JPanel {
 
-    public static final double gravity = 7.0;
+    public static final double gravity = 0.5;
+    public static final double friction = 0.75;
+    public static final double airFriction = 0.7;
     static int prevScore = 0;
     static int highScore = 0;
     static int score = 0;
@@ -88,8 +90,8 @@ public class GamePanel extends JPanel {
         scrollScreen(-score);
         mainPlayer.setX((Game.WIDTH - 50) / 2);
         mainPlayer.setY(Game.HEIGHT - 270);
-        mainPlayer.setYAcc(0);
-        mainPlayer.setXAcc(0);
+        mainPlayer.setYVel(0);
+        mainPlayer.setXVel(0);
         score = 0;
         mainPlayer.setAteCarrot(false);
         platGen.restartGen();
@@ -111,16 +113,16 @@ public class GamePanel extends JPanel {
             //keyboard inputs
             if (wPressed) {
                 if (mainPlayer.getGrounded()) {
-                    mainPlayer.setYAcc(mainPlayer.getJumpHeight());
+                    mainPlayer.setYVel(mainPlayer.getJumpHeight());
                 }
             }
             if (aPressed && mainPlayer.isWithinSpeed()) {
                 mainPlayer.setFacingRight(false);
-                mainPlayer.setXAcc(mainPlayer.getXAcc() - 1.0);
+                mainPlayer.setXVel(mainPlayer.getXVel() - mainPlayer.getXAcc());
             }
             if (dPressed && mainPlayer.isWithinSpeed()) {
                 mainPlayer.setFacingRight(true);
-                mainPlayer.setXAcc(mainPlayer.getXAcc() + 1.0);
+                mainPlayer.setXVel(mainPlayer.getXVel() + mainPlayer.getXAcc());
             }
 
             //collision
@@ -132,17 +134,15 @@ public class GamePanel extends JPanel {
             }
 
             //applying movement
-            mainPlayer.applyXAcc();
-            mainPlayer.applyYAcc();
+            mainPlayer.applyXVel();
+            mainPlayer.applyYVel();
             for (int i = 0; i < plats.size(); i++) {
-                plats.get(i).applyXAcc();
+                plats.get(i).applyXVel();
             }
 
             //scrolling and score
-            if (mainPlayer.getY() < Game.HEIGHT / 2) {
-                scrollScreen((int) gravity - 3); //scroll screen of |yAcc| and change score by same amount
-            } else if (mainPlayer.getY() > 3 * Game.HEIGHT / 4){
-                scrollScreen((int) -gravity);
+            if ((mainPlayer.getY() < Game.HEIGHT / 2) || (mainPlayer.getY() > 3 * Game.HEIGHT / 4)) {
+                scrollScreen((int) (-1 * mainPlayer.getYVel()));
             }
 
             //animation
@@ -160,9 +160,9 @@ public class GamePanel extends JPanel {
             mainPlayer.draw(g);
             if (mainPlayer.getAteCarrot()) { //plat timer
                 g.setColor(new Color(225, 120, 35));
-                g.fillRect(mainPlayer.getX(), mainPlayer.getY() - 6, (int) (5 * (10 - (System.currentTimeMillis() - mainPlayer.getWhenAteCarrot()) / 1000)), 3);
+                g.fillRect(mainPlayer.getX(), mainPlayer.getY() - 6, (int) (5 * (10 - (System.currentTimeMillis() - mainPlayer.getWhenAteCarrot()) / 1000)), 3); //carrot timer
             }
-            g.setColor(new Color(255, 255, 255));
+            g.setColor(new Color(100, 0, 0));
             g.setFont(new Font("font", 3, 50));
             g.drawString(String.valueOf(score / 10), Game.WIDTH / 2 - 25, 50); //score
             
