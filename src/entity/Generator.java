@@ -37,7 +37,7 @@ public class Generator {
         double xVel;
 
         while (true) {
-            if (yCounter <= -Game.HEIGHT) {
+            if (yCounter <= (-10 * Game.HEIGHT)) { //fill 10 screens above
                 break;
             }
             curWidth = PLATWIDTHS[rand.nextInt(PLATWIDTHS.length)]; //gets random width
@@ -48,8 +48,8 @@ public class Generator {
 
             if (rand.nextInt(100) <= 5) { //5% chance
                 plats.get(plats.size() - 1).carrot = new Carrot(25, 25, xPos + rand.nextInt(curWidth - 25), yCounter - 25);
-            } else if (rand.nextInt(100) <= 25) { //25% chance
-                plats.get(plats.size() - 1).snake = new Snake(75, 20, xPos + rand.nextInt(curWidth - 75), yCounter - 20, 1 + rand.nextInt(2));
+            } else if (rand.nextInt(100) <= 20) { //20% chance
+                plats.get(plats.size() - 1).snake = new Snake(75, 20, xPos + rand.nextInt(curWidth - 75), yCounter - 20, 1 + rand.nextInt(1));
                 plats.get(plats.size() - 1).snake.groundPlat = plats.get(plats.size() - 1);
             }
 

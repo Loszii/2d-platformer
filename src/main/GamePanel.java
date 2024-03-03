@@ -107,7 +107,7 @@ public class GamePanel extends JPanel {
             }
 
             //background 
-            g.setColor(new Color(100, 100, 100));
+            g.setColor(new Color(69, 179, 224));
             g.fillRect(0, 0, Game.WIDTH, Game.HEIGHT);
 
             //keyboard inputs
@@ -162,7 +162,7 @@ public class GamePanel extends JPanel {
                 g.setColor(new Color(225, 120, 35));
                 g.fillRect(mainPlayer.getX(), mainPlayer.getY() - 6, (int) (5 * (10 - (System.currentTimeMillis() - mainPlayer.getWhenAteCarrot()) / 1000)), 3); //carrot timer
             }
-            g.setColor(new Color(100, 0, 0));
+            g.setColor(new Color(255, 255, 255));
             g.setFont(new Font("font", 3, 50));
             g.drawString(String.valueOf(score / 10), Game.WIDTH / 2 - 25, 50); //score
             
@@ -180,13 +180,13 @@ public class GamePanel extends JPanel {
             g.setFont(new Font("font", 3, 100)); //score
             g.drawString("Score: ", 500, Game.HEIGHT / 2 - 100); 
             g.setFont(new Font("font", 2, 100));
-            g.setColor(new Color(100, 0, 0));
+            g.setColor(new Color(255, 255, 255));
             g.drawString(String.valueOf(prevScore / 10), 1200, Game.HEIGHT / 2 - 100);
             g.setColor(new Color(0, 0, 0));
             g.setFont(new Font("font", 3, 100));
             g.drawString("High Score: ", 500, Game.HEIGHT / 2 + 100); 
             g.setFont(new Font("font", 2, 100));
-            g.setColor(new Color(100, 0, 0));
+            g.setColor(new Color(255, 255, 255));
             g.drawString(String.valueOf(highScore / 10), 1200, Game.HEIGHT / 2 + 100);
             g.setColor(new Color(0, 0, 0));
 
