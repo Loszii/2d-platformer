@@ -92,6 +92,8 @@ public class GamePanel extends JPanel {
         mainPlayer.setY(Game.HEIGHT - 270);
         mainPlayer.setYVel(0);
         mainPlayer.setXVel(0);
+        mainPlayer.setIsInvulnerable(false);
+        mainPlayer.setHealth(3);
         score = 0;
         mainPlayer.setAteCarrot(false);
         platGen.restartGen();
@@ -132,6 +134,10 @@ public class GamePanel extends JPanel {
             if (mainPlayer.getAteCarrot()) {
                 mainPlayer.checkCarrotRanOut();
             }
+            //vulnerability
+            if (mainPlayer.getIsInvulnerable()) {
+                mainPlayer.checkInvulnerableRanOut();
+            }
 
             //applying movement
             mainPlayer.applyXVel();
@@ -162,6 +168,15 @@ public class GamePanel extends JPanel {
                 g.setColor(new Color(225, 120, 35));
                 g.fillRect(mainPlayer.getX(), mainPlayer.getY() - 6, (int) (5 * (10 - (System.currentTimeMillis() - mainPlayer.getWhenAteCarrot()) / 1000)), 3); //carrot timer
             }
+            
+            //health bars
+            g.setColor(new Color(255, 0, 0));
+            int y = 10;
+            for (int i = 0; i < mainPlayer.getHealth(); i++) {
+                g.fillRect(20, y, 100, 20);
+                y += 40;
+            }
+
             g.setColor(new Color(255, 255, 255));
             g.setFont(new Font("font", 3, 50));
             g.drawString(String.valueOf(score / 10), Game.WIDTH / 2 - 25, 50); //score

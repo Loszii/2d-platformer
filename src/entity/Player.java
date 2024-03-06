@@ -8,14 +8,17 @@ public class Player extends Entity{
     final double maxXVel = 12.5;
     final double maxFallSpeed = 7.0;
     final double xAcc = 1.0;
+    int health = 3;
     int walkFrame = 0;
     int animationCounter = 0;
     long whenAteCarrot;
+    long whenGotHit;
     double xVelOfGround = 0;
     double jumpHeight = -15.0;
     boolean facingRight = true;
     boolean isGrounded = true;
     boolean ateCarrot = false;
+    boolean isInvulnerable = false;
     private BufferedImage airRightImg;
     private BufferedImage airLeftImg;
     private BufferedImage idleRightImg;
@@ -58,6 +61,9 @@ public class Player extends Entity{
     public boolean getAteCarrot() {
         return ateCarrot;
     }
+    public boolean getIsInvulnerable() {
+        return isInvulnerable;
+    }
     public int getWalkFrame() {
         return walkFrame;
     }
@@ -73,6 +79,9 @@ public class Player extends Entity{
     public double getXAcc() {
         return xAcc;
     }
+    public int getHealth() {
+        return health;
+    }
 
     public void setFacingRight (boolean status) {
         facingRight = status;
@@ -87,6 +96,21 @@ public class Player extends Entity{
             whenAteCarrot = System.currentTimeMillis();
         } else if (pastStatus){
             jumpHeight += 5.0;
+        }
+    }
+    public void setIsInvulnerable(boolean status) {
+        isInvulnerable = status;
+        if (status) {
+            whenGotHit = System.currentTimeMillis();
+        }
+    }
+    public void setHealth(int health) {
+        if (!isInvulnerable){
+            this.health = health;
+            setIsInvulnerable(true);
+            if (health == 0) {
+                GamePanel.setGameOver(true);
+            }
         }
     }
 
@@ -152,6 +176,12 @@ public class Player extends Entity{
         }
     }
 
+    public void checkInvulnerableRanOut() {
+        if (System.currentTimeMillis() - whenGotHit > 1000) { //1 second
+            isInvulnerable = false;
+        }
+    }
+
     //check when to update walk frame
     private boolean checkAnimationCounter() {
         int xDiff = (int) (xVel - xVelOfGround);
@@ -179,8 +209,7 @@ public class Player extends Entity{
         animationCounter += 1;
     }
 
-    //draws player
-    public void draw(Graphics g) {
+    private void drawHelper(Graphics g) {
         if (facingRight) {
             if (isGrounded && xVel == xVelOfGround){
                 g.drawImage(idleRightImg, x, y, null);
@@ -208,6 +237,18 @@ public class Player extends Entity{
                 g.drawImage(playerWalkL3, x, y, null);
             } else if (walkFrame == 3) {
                 g.drawImage(playerWalkL4, x, y, null);
+            }
+        }
+    }
+
+    //draws player
+    public void draw(Graphics g) {
+        if (!isInvulnerable) {
+            drawHelper(g);
+        } else {
+            int timeDiff = (int) (System.currentTimeMillis() - whenGotHit);
+            if (timeDiff % 2 == 0) {
+                drawHelper(g);
             }
         }
     }

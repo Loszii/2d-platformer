@@ -58,7 +58,7 @@ public class Collision {
         if (closest.snake != null) {
             if ((mainPlayer.x + mainPlayer.width) > (closest.snake.x) && mainPlayer.x < (closest.snake.x + closest.snake.width)) {
                 if ((mainPlayer.y + mainPlayer.height) > closest.snake.y && mainPlayer.y < (closest.snake.y + closest.snake.height)) {
-                    GamePanel.setGameOver(true);
+                    mainPlayer.setHealth(mainPlayer.health - 1);
                 }
             }
         }
