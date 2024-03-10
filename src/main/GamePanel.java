@@ -33,7 +33,7 @@ public class GamePanel extends JPanel {
         setPanelSize();
 
         //object init
-        mainPlayer = new Player(50, 50, (Game.WIDTH - 50) / 2, Game.HEIGHT - 270);
+        mainPlayer = new Player(50, 50, (Game.WIDTH - 50) / 2, Game.HEIGHT - (Game.HEIGHT / 4));
 
         platGen = new Generator();
         collision = new Collision();
@@ -89,7 +89,7 @@ public class GamePanel extends JPanel {
     private static void resetGame() {
         scrollScreen(-score);
         mainPlayer.setX((Game.WIDTH - 50) / 2);
-        mainPlayer.setY(Game.HEIGHT - 270);
+        mainPlayer.setY(Game.HEIGHT - (Game.HEIGHT / 4));
         mainPlayer.setYVel(0);
         mainPlayer.setXVel(0);
         mainPlayer.setIsInvulnerable(false);
@@ -186,27 +186,28 @@ public class GamePanel extends JPanel {
             g.setColor(new Color(100, 100, 100)); //background
             g.fillRect(0, 0, Game.WIDTH, Game.HEIGHT);
             g.setColor(new Color(125, 125, 125));
-            g.fillRect(300, 300, 1320, 480);
+            g.fillRect(Game.WIDTH / 4, Game.HEIGHT / 4, Game.WIDTH / 2, Game.HEIGHT / 2);
 
             g.setColor(new Color(0, 0, 0)); //gameover
-            g.setFont(new Font("font", 1, 200));
-            g.drawString("GAME OVER!", 300, Game.HEIGHT / 2 - 300); 
-
-            g.setFont(new Font("font", 3, 100)); //score
-            g.drawString("Score: ", 500, Game.HEIGHT / 2 - 100); 
-            g.setFont(new Font("font", 2, 100));
+            g.setFont(new Font("font", 1, 100));
+            g.drawString("GAME OVER!", Game.WIDTH / 4, Game.HEIGHT / 7); 
+            
+            //score stuff
+            g.setFont(new Font("font", 3, 50)); //score
+            g.drawString("Score: ", Game.WIDTH / 4 + 50, Game.HEIGHT / 4 + 150); 
+            g.setFont(new Font("font", 2, 50));
             g.setColor(new Color(255, 255, 255));
-            g.drawString(String.valueOf(prevScore / 10), 1200, Game.HEIGHT / 2 - 100);
+            g.drawString(String.valueOf(prevScore / 10), Game.WIDTH / 2 + 100, Game.HEIGHT / 4 + 150);
             g.setColor(new Color(0, 0, 0));
-            g.setFont(new Font("font", 3, 100));
-            g.drawString("High Score: ", 500, Game.HEIGHT / 2 + 100); 
-            g.setFont(new Font("font", 2, 100));
+            g.setFont(new Font("font", 3, 50));
+            g.drawString("High Score: ", Game.WIDTH / 4 + 50, Game.HEIGHT / 4 + 250); 
+            g.setFont(new Font("font", 2, 50));
             g.setColor(new Color(255, 255, 255));
-            g.drawString(String.valueOf(highScore / 10), 1200, Game.HEIGHT / 2 + 100);
-            g.setColor(new Color(0, 0, 0));
+            g.drawString(String.valueOf(highScore / 10), Game.WIDTH / 2 + 100, Game.HEIGHT / 4 + 250);
 
-            g.setFont(new Font("font", 1, 100)); //last line 
-            g.drawString("PRESS ENTER OR ESC", 400, Game.HEIGHT / 2 + 400);
+            g.setColor(new Color(0, 0, 0));
+            g.setFont(new Font("font", 1, 75)); //last line 
+            g.drawString("PRESS ENTER OR ESC", Game.WIDTH / 6, Game.HEIGHT - 75);
         }
     }
 

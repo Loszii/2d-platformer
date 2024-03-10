@@ -8,7 +8,6 @@ public class GameWindow {
     public GameWindow(GamePanel gamePanel) {
         jframe = new JFrame();
         jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        jframe.setUndecorated(true);
         jframe.setResizable(false);
         jframe.add(gamePanel);
         jframe.pack(); //pack jpanel in frame

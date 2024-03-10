@@ -5,13 +5,13 @@ import main.Game;
 
 public class Generator {
 
-    final static int[] PLATWIDTHS = {300, 400, 500};
+    final static int[] PLATWIDTHS = {Game.WIDTH / 4, Game.WIDTH / 3};
     static ArrayList<Platform> plats;
-    private int yCounter = Game.HEIGHT - 400;
+    private int yCounter = Game.HEIGHT - (Game.HEIGHT / 3);
 
     public Generator() {
         plats = new ArrayList<Platform>();
-        plats.add(new Platform(2120, 500, -100, Game.HEIGHT - 220, 0)); //plat under player
+        plats.add(new Platform(Game.WIDTH * 2, 500, -100, Game.HEIGHT - (Game.HEIGHT / 4) + 50, 0)); //plat under player
     }
 
     public ArrayList<Platform> getPlats() {
@@ -24,8 +24,8 @@ public class Generator {
 
     public void restartGen() {
         plats = new ArrayList<Platform>();
-        plats.add(new Platform(2120, 500, -100, Game.HEIGHT - 220, 0));
-        yCounter = Game.HEIGHT - 400;
+        plats.add(new Platform(Game.WIDTH * 2, 500, -100, Game.HEIGHT - (Game.HEIGHT / 4) + 50, 0));
+        yCounter = Game.HEIGHT - (Game.HEIGHT / 3);
         Collision.plats = plats;
     }
 
