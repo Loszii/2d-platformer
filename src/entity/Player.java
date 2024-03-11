@@ -247,7 +247,7 @@ public class Player extends Entity{
             drawHelper(g);
         } else {
             int timeDiff = (int) (System.currentTimeMillis() - whenGotHit);
-            if (timeDiff % 2 == 0) {
+            if ((timeDiff % 10) < 5) {
                 drawHelper(g);
             }
         }
