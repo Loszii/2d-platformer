@@ -2,6 +2,7 @@ package main;
 import java.util.ArrayList;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.image.BufferedImage;
 import java.awt.Dimension;
 import javax.swing.JPanel;
 import entity.Player;
@@ -27,6 +28,7 @@ public class GamePanel extends JPanel {
     static ArrayList<Platform> plats;
     static Generator platGen;
     static Collision collision;
+    static BufferedImage heart;
 
 
     public GamePanel(){
@@ -38,7 +40,7 @@ public class GamePanel extends JPanel {
         platGen = new Generator();
         collision = new Collision();
         plats = platGen.getPlats();
-
+        heart = mainPlayer.importImg("/res/item/heart.png");
 
         //make keybinding actions
         new KeyBinding(this);
@@ -169,12 +171,12 @@ public class GamePanel extends JPanel {
                 g.fillRect(mainPlayer.getX(), mainPlayer.getY() - 6, (int) (5 * (10 - (System.currentTimeMillis() - mainPlayer.getWhenAteCarrot()) / 1000)), 3); //carrot timer
             }
             
-            //health bars
+            //health hearts
             g.setColor(new Color(255, 0, 0));
-            int y = 10;
+            int xCount = 10;
             for (int i = 0; i < mainPlayer.getHealth(); i++) {
-                g.fillRect(20, y, 100, 20);
-                y += 40;
+                g.drawImage(heart, xCount, 10, null);
+                xCount += 60;
             }
 
             g.setColor(new Color(255, 255, 255));
