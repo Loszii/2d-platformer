@@ -196,10 +196,10 @@ public class GamePanel extends JPanel {
             
             //score stuff
             g.setFont(new Font("font", 3, 50)); //score
-            g.drawString("Score: ", Game.WIDTH / 4 + 50, Game.HEIGHT / 4 + 150); 
+            g.drawString("Score: ", Game.WIDTH / 4 + 50, Game.HEIGHT / 4 + 100); 
             g.setFont(new Font("font", 2, 50));
             g.setColor(new Color(255, 255, 255));
-            g.drawString(String.valueOf(prevScore / 10), Game.WIDTH / 2 + 100, Game.HEIGHT / 4 + 150);
+            g.drawString(String.valueOf(prevScore / 10), Game.WIDTH / 2 + 100, Game.HEIGHT / 4 + 100);
             g.setColor(new Color(0, 0, 0));
             g.setFont(new Font("font", 3, 50));
             g.drawString("High Score: ", Game.WIDTH / 4 + 50, Game.HEIGHT / 4 + 250); 
@@ -209,7 +209,7 @@ public class GamePanel extends JPanel {
 
             g.setColor(new Color(0, 0, 0));
             g.setFont(new Font("font", 1, 75)); //last line 
-            g.drawString("PRESS ENTER OR ESC", Game.WIDTH / 6, Game.HEIGHT - 75);
+            g.drawString("PRESS ENTER OR ESC", Game.WIDTH / 6 + 20, Game.HEIGHT - 75);
         }
     }
 

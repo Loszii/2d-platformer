@@ -36,10 +36,7 @@ public class Generator {
         int xPos;
         double xVel;
 
-        while (true) {
-            if (yCounter <= (-10 * Game.HEIGHT)) { //fill 10 screens above
-                break;
-            }
+        while (yCounter >= (-10 * Game.HEIGHT)) { //fill 10 screens above
             curWidth = PLATWIDTHS[rand.nextInt(PLATWIDTHS.length)]; //gets random width
             xPos = rand.nextInt(Game.WIDTH - curWidth);
             xVel = (rand.nextInt(6) + 1);
